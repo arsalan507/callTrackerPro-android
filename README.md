@@ -1,4 +1,4 @@
-git add README.md# 📱 TeleCRM Android App
+# 📱 TeleCRM Android App
 
 **Smart Call Logging & CRM System with AI-Powered Insights**
 
