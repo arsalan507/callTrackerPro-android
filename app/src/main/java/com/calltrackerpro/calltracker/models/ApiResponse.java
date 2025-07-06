@@ -1,9 +1,8 @@
-package com.telecrm.app.models;
+package com.calltrackerpro.calltracker.models;
 
 import com.google.gson.annotations.SerializedName;
 
 public class ApiResponse<T> {
-
     @SerializedName("success")
     private boolean success;
 
@@ -49,10 +48,9 @@ public class ApiResponse<T> {
         return !success || error != null;
     }
 
-    public String getDisplayMessage() {
-        if (hasError() && error != null) {
-            return error;
-        }
-        return message != null ? message : "Operation completed";
+    public String getErrorMessage() {
+        if (error != null) return error;
+        if (!success && message != null) return message;
+        return "Unknown error occurred";
     }
 }
