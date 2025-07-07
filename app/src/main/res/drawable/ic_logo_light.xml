@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,24m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0" />
+
+    <!-- Phone Icon -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M30.01,25.38c-1.23,0 -2.42,-0.2 -3.53,-0.56 -0.35,-0.12 -0.74,-0.03 -1.01,0.24l-1.57,1.97c-2.83,-1.35 -5.48,-3.9 -6.89,-6.83l1.95,-1.66c0.27,-0.28 0.35,-0.67 0.24,-1.02 -0.37,-1.11 -0.56,-2.3 -0.56,-3.53 0,-0.54 -0.45,-0.99 -0.99,-0.99H14.19C13.65,13 13,13.24 13,13.99 13,23.28 20.73,31 30.01,31c0.71,0 0.99,-0.63 0.99,-1.18v-3.45c0,-0.54 -0.45,-0.99 -0.99,-0.99z"/>
+
+    <!-- Letter "C" for CallTracker -->
+    <path
+        android:fillColor="#4FC3F7"
+        android:pathData="M33,18c0,-3 2,-5 5,-5v2c-1.5,0 -3,1.5 -3,3s1.5,3 3,3v2c-3,0 -5,-2 -5,-5z"/>
+
+</vector>
