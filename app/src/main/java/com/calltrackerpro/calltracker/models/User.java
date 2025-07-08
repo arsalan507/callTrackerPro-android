@@ -1,86 +1,192 @@
 package com.calltrackerpro.calltracker.models;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class User {
-    @SerializedName("_id")
-    private String userId;
-
-    @SerializedName("firstName")
-    private String firstName;
-
-    @SerializedName("lastName")
-    private String lastName;
+    @SerializedName("id")
+    private String id;
 
     @SerializedName("email")
     private String email;
 
+    @SerializedName("password")
+    private String password; // Only used for requests, not stored
+
+    @SerializedName("first_name")
+    private String firstName;
+
+    @SerializedName("last_name")
+    private String lastName;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("created_at")
+    private String createdAt;
+
+    @SerializedName("updated_at")
+    private String updatedAt;
+
     @SerializedName("role")
     private String role;
 
-    @SerializedName("organization")
-    private String organizationId;
-
-    @SerializedName("permissions")
-    private List<String> permissions;
-
-    @SerializedName("callCount")
+    @SerializedName("call_count")
     private int callCount;
 
-    @SerializedName("callLimit")
+    @SerializedName("call_limit")
     private int callLimit;
-
-    @SerializedName("subscriptionPlan")
-    private String subscriptionPlan;
 
     // Constructors
     public User() {}
 
+    // Constructor for login
     public User(String email, String password) {
         this.email = email;
+        this.password = password;
+    }
+
+    // Constructor for registration
+    public User(String email, String password, String firstName, String lastName) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     // Getters and Setters
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public String getId() {
+        return id;
+    }
 
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getOrganizationId() { return organizationId; }
-    public void setOrganizationId(String organizationId) { this.organizationId = organizationId; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public List<String> getPermissions() { return permissions; }
-    public void setPermissions(List<String> permissions) { this.permissions = permissions; }
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public int getCallCount() { return callCount; }
-    public void setCallCount(int callCount) { this.callCount = callCount; }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-    public int getCallLimit() { return callLimit; }
-    public void setCallLimit(int callLimit) { this.callLimit = callLimit; }
+    public String getLastName() {
+        return lastName;
+    }
 
-    public String getSubscriptionPlan() { return subscriptionPlan; }
-    public void setSubscriptionPlan(String subscriptionPlan) { this.subscriptionPlan = subscriptionPlan; }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getRole() {
+        return role != null ? role : "user";
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public int getCallCount() {
+        return callCount;
+    }
+
+    public void setCallCount(int callCount) {
+        this.callCount = callCount;
+    }
+
+    public int getCallLimit() {
+        return callLimit;
+    }
+
+    public void setCallLimit(int callLimit) {
+        this.callLimit = callLimit;
+    }
+
+    // Utility methods
     public String getFullName() {
-        return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "").trim();
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+
+        StringBuilder fullName = new StringBuilder();
+        if (firstName != null && !firstName.isEmpty()) {
+            fullName.append(firstName);
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            if (fullName.length() > 0) {
+                fullName.append(" ");
+            }
+            fullName.append(lastName);
+        }
+
+        return fullName.length() > 0 ? fullName.toString() : email;
     }
 
-    public boolean hasPermission(String permission) {
-        return permissions != null && permissions.contains(permission);
+    public String getDisplayName() {
+        String fullName = getFullName();
+        return fullName != null && !fullName.equals(email) ? fullName : email;
     }
 
-    public boolean isManager() {
-        return "manager".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role);
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
     }
 }

@@ -16,6 +16,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.calltrackerpro.calltracker.CreateAccountActivity;
 import com.calltrackerpro.calltracker.MainActivity;
 import com.calltrackerpro.calltracker.R;
 import com.calltrackerpro.calltracker.models.AuthResponse;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private TokenManager tokenManager;
     private ApiService apiService;
     private Button demoButton;
+    // Removed createAccountLink since you already have tvCreateAccount in layout
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         loadingProgressBar = findViewById(R.id.loading);
         demoButton = findViewById(R.id.demo_mode);
+
+        // Initialize Create Account TextView (already exists in your layout!)
+        TextView tvCreateAccount = findViewById(R.id.tvCreateAccount);
+
+        // Check if email was passed from CreateAccountActivity
+        handlePrefilledEmail();
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
             if (loginFormState == null) {
@@ -117,11 +125,32 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             attemptLogin();
         });
-        // ← ADD THIS DEMO BUTTON CLICK LISTENER HERE:
+
         demoButton.setOnClickListener(v -> {
             showToast("Entering Demo Mode - Skipping Authentication");
             navigateToMain();
         });
+
+        // Create Account navigation - Using your existing TextView!
+        if (tvCreateAccount != null) {
+            tvCreateAccount.setOnClickListener(v -> {
+                Log.d(TAG, "Create Account clicked - navigating to CreateAccountActivity");
+                Intent intent = new Intent(this, CreateAccountActivity.class);
+                startActivity(intent);
+            });
+        } else {
+            Log.e(TAG, "tvCreateAccount not found! Check if strings.xml has action_create_account");
+        }
+    }
+
+    // NEW: Handle pre-filled email from CreateAccountActivity
+    private void handlePrefilledEmail() {
+        String prefilledEmail = getIntent().getStringExtra("email");
+        if (prefilledEmail != null && !prefilledEmail.isEmpty()) {
+            usernameEditText.setText(prefilledEmail);
+            passwordEditText.requestFocus();
+            showToast("Account created! Please log in with your new credentials.");
+        }
     }
 
     private void attemptLogin() {
@@ -147,11 +176,11 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Create user object for login
-        User loginUser = new User(email, password);
+        // ✅ FIXED: Create LoginRequest object instead of User
+        ApiService.LoginRequest loginRequest = new ApiService.LoginRequest(email, password);
 
         // Make API call to CallTracker Pro backend
-        Call<AuthResponse> call = apiService.login(loginUser);
+        Call<AuthResponse> call = apiService.login(loginRequest);
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {

@@ -3,17 +3,14 @@ package com.calltrackerpro.calltracker.models;
 import com.google.gson.annotations.SerializedName;
 
 public class CallLog {
-    @SerializedName("_id")
+    @SerializedName("id")
     private String id;
 
-    @SerializedName("phoneNumber")
+    @SerializedName("phone_number")
     private String phoneNumber;
 
-    @SerializedName("contactName")
-    private String contactName;
-
-    @SerializedName("callType")
-    private String callType; // "incoming", "outgoing", "missed"
+    @SerializedName("call_type")
+    private String callType; // incoming, outgoing, missed
 
     @SerializedName("duration")
     private long duration; // in seconds
@@ -21,37 +18,25 @@ public class CallLog {
     @SerializedName("timestamp")
     private long timestamp; // Unix timestamp
 
-    @SerializedName("date")
-    private String date; // ISO date string
+    @SerializedName("contact_name")
+    private String contactName;
 
-    @SerializedName("userId")
+    @SerializedName("call_status")
+    private String callStatus; // completed, missed, declined
+
+    @SerializedName("date")
+    private String date;
+
+    @SerializedName("time")
+    private String time;
+
+    @SerializedName("user_id")
     private String userId;
 
-    @SerializedName("organizationId")
-    private String organizationId;
-
-    @SerializedName("callStatus")
-    private String callStatus; // "completed", "busy", "no_answer", "failed"
-
-    @SerializedName("notes")
-    private String notes;
-
-    @SerializedName("tags")
-    private String[] tags;
-
-    @SerializedName("recordingUrl")
-    private String recordingUrl;
-
-    @SerializedName("transcription")
-    private String transcription;
-
-    @SerializedName("sentiment")
-    private String sentiment; // "positive", "negative", "neutral"
-
-    @SerializedName("createdAt")
+    @SerializedName("created_at")
     private String createdAt;
 
-    @SerializedName("updatedAt")
+    @SerializedName("updated_at")
     private String updatedAt;
 
     // Constructors
@@ -65,92 +50,123 @@ public class CallLog {
     }
 
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getContactName() { return contactName; }
-    public void setContactName(String contactName) { this.contactName = contactName; }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-    public String getCallType() { return callType; }
-    public void setCallType(String callType) { this.callType = callType; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-    public long getDuration() { return duration; }
-    public void setDuration(long duration) { this.duration = duration; }
+    public String getCallType() {
+        return callType;
+    }
 
-    public long getTimestamp() { return timestamp; }
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public long getDuration() {
+        return duration;
+    }
 
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
 
-    public String getOrganizationId() { return organizationId; }
-    public void setOrganizationId(String organizationId) { this.organizationId = organizationId; }
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-    public String getCallStatus() { return callStatus; }
-    public void setCallStatus(String callStatus) { this.callStatus = callStatus; }
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getContactName() {
+        return contactName;
+    }
 
-    public String[] getTags() { return tags; }
-    public void setTags(String[] tags) { this.tags = tags; }
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
 
-    public String getRecordingUrl() { return recordingUrl; }
-    public void setRecordingUrl(String recordingUrl) { this.recordingUrl = recordingUrl; }
+    public String getCallStatus() {
+        return callStatus;
+    }
 
-    public String getTranscription() { return transcription; }
-    public void setTranscription(String transcription) { this.transcription = transcription; }
+    public void setCallStatus(String callStatus) {
+        this.callStatus = callStatus;
+    }
 
-    public String getSentiment() { return sentiment; }
-    public void setSentiment(String sentiment) { this.sentiment = sentiment; }
+    public String getDate() {
+        return date;
+    }
 
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-    public String getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+    public String getTime() {
+        return time;
+    }
 
-    // Helper methods
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    // Utility methods
     public String getFormattedDuration() {
-        if (duration <= 0) return "0s";
-
         long minutes = duration / 60;
         long seconds = duration % 60;
-
-        if (minutes > 0) {
-            return minutes + "m " + seconds + "s";
-        } else {
-            return seconds + "s";
-        }
-    }
-
-    public boolean isIncoming() {
-        return "incoming".equalsIgnoreCase(callType);
-    }
-
-    public boolean isOutgoing() {
-        return "outgoing".equalsIgnoreCase(callType);
-    }
-
-    public boolean isMissed() {
-        return "missed".equalsIgnoreCase(callType);
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     public String getDisplayName() {
         return contactName != null && !contactName.isEmpty() ? contactName : phoneNumber;
     }
 
-    public boolean hasRecording() {
-        return recordingUrl != null && !recordingUrl.isEmpty();
-    }
-
-    public boolean hasTranscription() {
-        return transcription != null && !transcription.isEmpty();
+    @Override
+    public String toString() {
+        return "CallLog{" +
+                "id='" + id + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", callType='" + callType + '\'' +
+                ", duration=" + duration +
+                ", timestamp=" + timestamp +
+                ", contactName='" + contactName + '\'' +
+                ", callStatus='" + callStatus + '\'' +
+                '}';
     }
 }

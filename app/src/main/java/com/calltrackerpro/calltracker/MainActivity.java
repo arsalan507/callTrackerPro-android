@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             if (tokenManager.isLoggedIn()) {
                 fetchCallLogs();
             } else {
-                showToast("Please login first to view logs");
+                testCallLogsEndpoint(); // Test call logs endpoint if not logged in
             }
         });
 
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             statusText.setText("✅ Ready - " + user.getFullName() + " (" + user.getRole() + ")");
             syncButton.setText("📤 Sync Call Logs");
             syncButton.setEnabled(true);
+            viewLogsButton.setText("📥 Fetch Call Logs");
             viewLogsButton.setEnabled(true);
 
             // Update call statistics
@@ -115,10 +116,11 @@ public class MainActivity extends AppCompatActivity {
                     (user.getCallLimit() == 0 ? "∞" : user.getCallLimit()));
         } else {
             // User not logged in - show as demo mode
-            statusText.setText("🔐 Demo Mode - Login required for full features");
+            statusText.setText("🔐 Demo Mode - Testing available endpoints");
             syncButton.setText("🔍 Test API Connection");
             syncButton.setEnabled(true);
-            viewLogsButton.setEnabled(false);
+            viewLogsButton.setText("🧪 Test Call Logs Endpoint");
+            viewLogsButton.setEnabled(true);
             callCountText.setText("📞 Total: " + totalCalls);
         }
 
@@ -155,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testApiConnection() {
-        statusText.setText("🔍 Testing API connection...");
+        statusText.setText("🔍 Testing main API connection...");
+        Log.d(TAG, "Testing API connection to: https://calltrackerpro-backend.vercel.app/api/test");
 
         Call<ApiResponse<String>> call = apiService.testConnection();
         call.enqueue(new Callback<ApiResponse<String>>() {
@@ -164,26 +167,61 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<String> apiResponse = response.body();
                     if (apiResponse.isSuccess()) {
-                        statusText.setText("✅ API connection successful - Ready for authentication");
-                        showToast("API connection working! Please login to continue.");
-                        Log.d(TAG, "✅ API test successful: " + apiResponse.getData());
+                        statusText.setText("✅ Main API working! Message: " + apiResponse.getData());
+                        showToast("✅ API connection successful!");
+                        Log.d(TAG, "✅ API test successful: " + apiResponse.getMessage());
                     } else {
                         statusText.setText("❌ API error: " + apiResponse.getErrorMessage());
-                        showToast("API error: " + apiResponse.getErrorMessage());
+                        showToast("❌ API error: " + apiResponse.getErrorMessage());
                         Log.e(TAG, "❌ API test failed: " + apiResponse.getErrorMessage());
                     }
                 } else {
-                    statusText.setText("❌ HTTP error: " + response.code());
-                    showToast("HTTP error: " + response.code());
-                    Log.e(TAG, "❌ HTTP error: " + response.code());
+                    statusText.setText("❌ HTTP error: " + response.code() + " - " + response.message());
+                    showToast("❌ HTTP error: " + response.code());
+                    Log.e(TAG, "❌ HTTP error: " + response.code() + " - " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
                 statusText.setText("❌ Network error: " + t.getMessage());
-                showToast("Network error: " + t.getMessage());
+                showToast("❌ Network error: " + t.getMessage());
                 Log.e(TAG, "❌ API test failed: " + t.getMessage());
+            }
+        });
+    }
+
+    private void testCallLogsEndpoint() {
+        statusText.setText("🧪 Testing call logs endpoint...");
+        Log.d(TAG, "Testing call logs endpoint: https://calltrackerpro-backend.vercel.app/api/call-logs/test");
+
+        Call<ApiResponse<String>> call = apiService.testCallLogs();
+        call.enqueue(new Callback<ApiResponse<String>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<String> apiResponse = response.body();
+                    if (apiResponse.isSuccess()) {
+                        statusText.setText("✅ Call logs endpoint working! " + apiResponse.getMessage());
+                        showToast("✅ Call logs API working!");
+                        Log.d(TAG, "✅ Call logs test successful: " + apiResponse.getMessage());
+                    } else {
+                        statusText.setText("❌ Call logs error: " + apiResponse.getErrorMessage());
+                        showToast("❌ Call logs error: " + apiResponse.getErrorMessage());
+                        Log.e(TAG, "❌ Call logs test failed: " + apiResponse.getErrorMessage());
+                    }
+                } else {
+                    statusText.setText("❌ HTTP error: " + response.code() + " - " + response.message());
+                    showToast("❌ HTTP error: " + response.code());
+                    Log.e(TAG, "❌ HTTP error: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                statusText.setText("❌ Network error: " + t.getMessage());
+                showToast("❌ Network error: " + t.getMessage());
+                Log.e(TAG, "❌ Call logs test failed: " + t.getMessage());
             }
         });
     }
@@ -243,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchCallLogs() {
         if (!tokenManager.isLoggedIn()) {
-            showToast("Please login first");
+            testCallLogsEndpoint(); // Fall back to testing if not logged in
             return;
         }
 
@@ -259,10 +297,11 @@ public class MainActivity extends AppCompatActivity {
                     ApiResponse<java.util.List<CallLog>> apiResponse = response.body();
                     if (apiResponse.isSuccess()) {
                         java.util.List<CallLog> callLogs = apiResponse.getData();
-                        statusText.setText("✅ Fetched " + callLogs.size() + " call logs");
-                        showToast("Fetched " + callLogs.size() + " call logs");
+                        int count = callLogs != null ? callLogs.size() : 0;
+                        statusText.setText("✅ Fetched " + count + " call logs");
+                        showToast("Fetched " + count + " call logs");
                         // TODO: Update RecyclerView with call logs
-                        Log.d(TAG, "✅ Fetched " + callLogs.size() + " call logs");
+                        Log.d(TAG, "✅ Fetched " + count + " call logs");
                     } else {
                         statusText.setText("❌ Fetch error: " + apiResponse.getErrorMessage());
                         showToast("Fetch error: " + apiResponse.getErrorMessage());

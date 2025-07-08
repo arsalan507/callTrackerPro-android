@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TeleCRM"
+rootProject.name = "callTrackerPro-android"
 include(":app")

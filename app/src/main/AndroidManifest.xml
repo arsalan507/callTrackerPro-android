@@ -38,6 +38,12 @@
             </intent-filter>
         </activity>
 
+        <!-- CreateAccountActivity - NEW ACTIVITY -->
+        <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM" />
+
         <!-- MainActivity - No longer launcher -->
         <activity
             android:name=".MainActivity"
