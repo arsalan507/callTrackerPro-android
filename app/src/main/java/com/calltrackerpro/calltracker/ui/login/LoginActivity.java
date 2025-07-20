@@ -17,8 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.calltrackerpro.calltracker.CreateAccountActivity;
+import com.calltrackerpro.calltracker.DashboardRouterActivity;
 import com.calltrackerpro.calltracker.MainActivity;
 import com.calltrackerpro.calltracker.R;
+import com.calltrackerpro.calltracker.SignupStep1Activity;
 import com.calltrackerpro.calltracker.models.AuthResponse;
 import com.calltrackerpro.calltracker.models.User;
 import com.calltrackerpro.calltracker.services.ApiService;
@@ -41,8 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     // CallTracker Pro components
     private TokenManager tokenManager;
     private ApiService apiService;
-    private Button demoButton;
-    // Removed createAccountLink since you already have tvCreateAccount in layout
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,12 +66,11 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         loginButton = findViewById(R.id.login);
         loadingProgressBar = findViewById(R.id.loading);
-        demoButton = findViewById(R.id.demo_mode);
 
         // Initialize Create Account TextView (already exists in your layout!)
         TextView tvCreateAccount = findViewById(R.id.tvCreateAccount);
 
-        // Check if email was passed from CreateAccountActivity
+        // Check if email was passed from CreateAccountActivity or SignupStep2Activity
         handlePrefilledEmail();
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
@@ -126,16 +125,11 @@ public class LoginActivity extends AppCompatActivity {
             attemptLogin();
         });
 
-        demoButton.setOnClickListener(v -> {
-            showToast("Entering Demo Mode - Skipping Authentication");
-            navigateToMain();
-        });
-
-        // Create Account navigation - Using your existing TextView!
+        // UPDATED: Create Account navigation - Now goes to SignupStep1Activity
         if (tvCreateAccount != null) {
             tvCreateAccount.setOnClickListener(v -> {
-                Log.d(TAG, "Create Account clicked - navigating to CreateAccountActivity");
-                Intent intent = new Intent(this, CreateAccountActivity.class);
+                Log.d(TAG, "Create Account clicked - navigating to SignupStep1Activity");
+                Intent intent = new Intent(this, SignupStep1Activity.class);
                 startActivity(intent);
             });
         } else {
@@ -143,13 +137,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // NEW: Handle pre-filled email from CreateAccountActivity
+    // UPDATED: Handle pre-filled email from both CreateAccountActivity and SignupStep2Activity
     private void handlePrefilledEmail() {
         String prefilledEmail = getIntent().getStringExtra("email");
         if (prefilledEmail != null && !prefilledEmail.isEmpty()) {
             usernameEditText.setText(prefilledEmail);
-            passwordEditText.requestFocus();
-            showToast("Account created! Please log in with your new credentials.");
+            passwordEditText.requestFocus(); // Focus on password field
+
+            // Show different messages based on the source
+            String source = getIntent().getStringExtra("source");
+            if ("signup_success".equals(source)) {
+                showToast("Account created successfully! Please log in with your new credentials.");
+            } else {
+                showToast("Welcome back! Please enter your password.");
+            }
         }
     }
 
@@ -176,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // ✅ FIXED: Create LoginRequest object instead of User
+        // Create LoginRequest object
         ApiService.LoginRequest loginRequest = new ApiService.LoginRequest(email, password);
 
         // Make API call to CallTracker Pro backend
@@ -195,14 +196,21 @@ public class LoginActivity extends AppCompatActivity {
                         handleLoginError(authResponse.getMessage());
                     }
                 } else {
-                    handleLoginError("Login failed. Please check your credentials.");
+                    // Handle different HTTP error codes
+                    if (response.code() == 401) {
+                        handleLoginError("Invalid email or password. Please try again.");
+                    } else if (response.code() == 429) {
+                        handleLoginError("Too many login attempts. Please try again later.");
+                    } else {
+                        handleLoginError("Login failed. Please check your credentials and try again.");
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 loadingProgressBar.setVisibility(View.GONE);
-                handleLoginError("Network error. Please check your connection.");
+                handleLoginError("Network error. Please check your connection and try again.");
                 Log.e(TAG, "Login failed: " + t.getMessage());
             }
         });
@@ -254,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DashboardRouterActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

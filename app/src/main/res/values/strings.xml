@@ -88,4 +88,7 @@
     <string name="call_history_title">Call History</string>
     <string name="contacts_title">Contacts</string>
     <string name="settings_title">Settings</string>
+    
+    <!-- AppBar Behavior -->
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

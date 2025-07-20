@@ -11,9 +11,20 @@
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
 
+    <!-- Audio recording permission for call transcription -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <!-- Storage permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- Call permissions for dialer functionality -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- Add hardware feature declaration for telephony -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -24,9 +35,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeleCRM"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <!-- LoginActivity - Now the launcher -->
+        <!-- LoginActivity - Launcher activity -->
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
@@ -38,17 +50,59 @@
             </intent-filter>
         </activity>
 
-        <!-- CreateAccountActivity - NEW ACTIVITY -->
+        <!-- CreateAccountActivity - Redirects to multi-step flow -->
         <activity
             android:name=".CreateAccountActivity"
             android:exported="false"
             android:theme="@style/Theme.TeleCRM" />
 
-        <!-- MainActivity - No longer launcher -->
+        <!-- SignupStep1Activity - NEW: First step of signup -->
+        <activity
+            android:name=".SignupStep1Activity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM"
+            android:label="Create Account - Step 1"
+            android:screenOrientation="portrait" />
+
+        <!-- SignupStep2Activity - NEW: Second step of signup -->
+        <activity
+            android:name=".SignupStep2Activity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM"
+            android:label="Create Account - Step 2"
+            android:screenOrientation="portrait" />
+
+        <!-- DashboardRouterActivity - NEW: Role-based dashboard router -->
+        <activity
+            android:name=".DashboardRouterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM"
+            android:label="CallTracker Pro"
+            android:screenOrientation="portrait" />
+
+        <!-- EditProfileActivity - NEW: Edit user profile -->
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM.NoActionBar"
+            android:label="Edit Profile"
+            android:parentActivityName=".DashboardRouterActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- OrganizationSelectorActivity - NEW: Multi-tenant organization selection -->
+        <activity
+            android:name=".OrganizationSelectorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM"
+            android:label="Select Organization"
+            android:screenOrientation="portrait" />
+
+        <!-- MainActivity - Legacy main dashboard (kept for backward compatibility) -->
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.TeleCRM" />
+            android:theme="@style/Theme.TeleCRM"
+            android:label="CallTracker Pro Dashboard" />
 
     </application>
 

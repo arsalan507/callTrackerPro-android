@@ -33,6 +33,7 @@ public class CreateAccountViewModel extends ViewModel {
         return registrationResult;
     }
 
+    // Original method - keep for backward compatibility
     public void createAccount(String firstName, String lastName, String email, String phone, String organizationName, String password) {
         isLoading.setValue(true);
 
@@ -80,6 +81,18 @@ public class CreateAccountViewModel extends ViewModel {
         });
     }
 
+    // NEW: Overloaded method that accepts CreateAccountRequest directly
+    public void registerUser(CreateAccountRequest request) {
+        createAccount(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPhone(),
+                request.getOrganizationName(),
+                request.getPassword()
+        );
+    }
+
     private void handleErrorResponse(int code, String message) {
         String errorMessage;
         switch (code) {
@@ -87,7 +100,7 @@ public class CreateAccountViewModel extends ViewModel {
                 errorMessage = "Invalid email or password format";
                 break;
             case 409:
-                errorMessage = "This email is already registered";
+                errorMessage = "This email is already registered. Please try logging in or use a different email.";
                 break;
             case 422:
                 errorMessage = "Please check your input and try again";
@@ -117,6 +130,14 @@ public class CreateAccountViewModel extends ViewModel {
             public String getMessage() {
                 return message;
             }
+
+            public boolean isSuccess() {
+                return true;
+            }
+
+            public String getErrorMessage() {
+                return null;
+            }
         }
 
         public static class Error extends RegistrationResult {
@@ -127,6 +148,14 @@ public class CreateAccountViewModel extends ViewModel {
             }
 
             public String getMessage() {
+                return message;
+            }
+
+            public boolean isSuccess() {
+                return false;
+            }
+
+            public String getErrorMessage() {
                 return message;
             }
         }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#6200EA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Account"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step 1 of 2 - Account Setup"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:alpha="0.8"
+            android:layout_marginBottom="40dp" />
+
+        <!-- Email Field -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:hint="Enter your email address"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Password Field -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:hint="Create a strong password"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Confirm Password Field -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Password"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:hint="Confirm your password"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Next Button -->
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="CONTINUE"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="#3700B3"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Sign In Link -->
+        <TextView
+            android:id="@+id/textViewSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? Sign In"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

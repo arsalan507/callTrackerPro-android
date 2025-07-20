@@ -12,6 +12,8 @@ public class TokenManager {
     private static final String KEY_USER = "user_data";
     private static final String KEY_EXPIRES_AT = "expires_at";
     private static final String KEY_LOGIN_TIME = "login_time";
+    private static final String KEY_CURRENT_ORG_ID = "current_org_id";
+    private static final String KEY_SELECTED_ORG_DATA = "selected_org_data";
     private static final String TAG = "TokenManager";
 
     private SharedPreferences preferences;
@@ -157,7 +159,7 @@ public class TokenManager {
         try {
             editor.clear();
             editor.apply();
-            Log.d(TAG, "🔐 Auth data cleared successfully");
+            Log.d(TAG, "🔐 All auth data and organization context cleared");
         } catch (Exception e) {
             Log.e(TAG, "❌ Error clearing auth data: " + e.getMessage());
         }
@@ -199,5 +201,97 @@ public class TokenManager {
      */
     public String getAuthHeader() {
         return getBearerToken();
+    }
+
+    /**
+     * Save current organization context
+     */
+    public void saveCurrentOrganization(String organizationId, com.calltrackerpro.calltracker.models.Organization organization) {
+        try {
+            editor.putString(KEY_CURRENT_ORG_ID, organizationId);
+            if (organization != null) {
+                String orgJson = gson.toJson(organization);
+                editor.putString(KEY_SELECTED_ORG_DATA, orgJson);
+            }
+            editor.apply();
+            Log.d(TAG, "✅ Current organization saved: " + organizationId);
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error saving current organization: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Get current organization ID
+     */
+    public String getCurrentOrganizationId() {
+        return preferences.getString(KEY_CURRENT_ORG_ID, null);
+    }
+
+    /**
+     * Get current organization data
+     */
+    public com.calltrackerpro.calltracker.models.Organization getCurrentOrganization() {
+        try {
+            String orgJson = preferences.getString(KEY_SELECTED_ORG_DATA, null);
+            if (orgJson != null) {
+                return gson.fromJson(orgJson, com.calltrackerpro.calltracker.models.Organization.class);
+            }
+            return null;
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error retrieving current organization: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Check if user has selected an organization
+     */
+    public boolean hasSelectedOrganization() {
+        return getCurrentOrganizationId() != null;
+    }
+
+    /**
+     * Clear organization context
+     */
+    public void clearOrganizationContext() {
+        try {
+            editor.remove(KEY_CURRENT_ORG_ID);
+            editor.remove(KEY_SELECTED_ORG_DATA);
+            editor.apply();
+            Log.d(TAG, "🗑️ Organization context cleared");
+        } catch (Exception e) {
+            Log.e(TAG, "❌ Error clearing organization context: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Check if user needs to select organization
+     */
+    public boolean needsOrganizationSelection() {
+        User user = getUser();
+        if (user == null) return false;
+        
+        // If user has multiple organizations but no current selection
+        return user.hasMultipleOrganizations() && !hasSelectedOrganization();
+    }
+
+    /**
+     * Get user role in current organization context
+     */
+    public String getCurrentRole() {
+        User user = getUser();
+        if (user != null) {
+            return user.getRole();
+        }
+        return null;
+    }
+
+    /**
+     * Check if current user has specific permission
+     */
+    public boolean hasPermission(String permission) {
+        User user = getUser();
+        return user != null && user.hasPermission(permission);
     }
 }

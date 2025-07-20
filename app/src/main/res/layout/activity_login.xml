@@ -169,7 +169,7 @@
             android:background="@drawable/primary_button_background"
             android:layout_marginBottom="16dp" />
 
-        <!-- Demo Mode Button -->
+        <!-- Demo Mode Button - Hidden -->
         <Button
             android:id="@+id/demo_mode"
             android:layout_width="match_parent"
@@ -178,7 +178,8 @@
             android:textColor="#4FC3F7"
             android:textSize="16sp"
             android:background="@drawable/demo_button_background"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
 
         <!-- Progress Bar -->
         <ProgressBar
