@@ -6,26 +6,53 @@
     android:layout_height="match_parent"
     android:background="@color/background_color">
 
-    <!-- Call Logs List with Swipe Refresh -->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_call_logs"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_call_logs"
+        <!-- Filter Chips -->
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="8dp"
-            android:paddingBottom="88dp"
-            tools:listitem="@layout/item_call_log" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scrollbars="none">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:singleSelection="false"
+                app:chipSpacingHorizontal="8dp" />
+
+        </HorizontalScrollView>
+
+        <!-- Tickets List with Swipe Refresh -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_tickets"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_tickets"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="88dp"
+                tools:listitem="@layout/item_ticket" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
 
     <!-- Empty State -->
     <LinearLayout
-        android:id="@+id/layout_empty_call_logs"
+        android:id="@+id/layout_empty_tickets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -39,14 +66,14 @@
             android:layout_height="120dp"
             android:layout_marginBottom="24dp"
             android:alpha="0.6"
-            android:src="@drawable/ic_phone"
+            android:src="@drawable/ic_contacts"
             app:tint="@color/text_secondary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="No Call Logs Found"
+            android:text="No Tickets Found"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -55,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Call logs will appear here when calls are made.\nTap a call to create a ticket or perform actions."
+            android:text="Tickets will appear here when calls are made.\nTap the + button to create a manual ticket."
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 

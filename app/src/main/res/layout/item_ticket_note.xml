@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/note_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/note_background"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <!-- Note Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/icon_note_type"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_person"
+            app:tint="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/text_note_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="Client Note" />
+
+        <TextView
+            android:id="@+id/text_author_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            tools:text="John Smith" />
+
+        <TextView
+            android:id="@+id/text_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            tools:text="Jan 15, 14:30" />
+
+    </LinearLayout>
+
+    <!-- Note Content -->
+    <TextView
+        android:id="@+id/text_note_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
+        tools:text="Customer expressed interest in our premium package. Mentioned budget constraints but seemed flexible on timeline. Need to follow up with detailed proposal by end of week." />
+
+</LinearLayout>

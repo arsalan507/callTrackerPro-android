@@ -7,6 +7,8 @@ import com.calltrackerpro.calltracker.models.CallLog;
 import com.calltrackerpro.calltracker.models.Organization;
 import com.calltrackerpro.calltracker.models.Team;
 import com.calltrackerpro.calltracker.models.Contact;
+import com.calltrackerpro.calltracker.models.Ticket;
+import com.calltrackerpro.calltracker.models.TicketNote;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -288,6 +290,131 @@ public interface ApiService {
                                                       @Query("user_id") String userId,
                                                       @Query("period") String period);
 
+    // ========== ENHANCED CRM TICKET ENDPOINTS - Phase 1 Backend Integration ==========
+
+    /**
+     * Create new ticket with enhanced backend integration
+     */
+    @POST("tickets")
+    Call<ApiResponse<Ticket>> createTicket(@Header("Authorization") String token, @Body Ticket ticket);
+
+    /**
+     * Get tickets with enhanced filtering and pagination
+     */
+    @GET("tickets")
+    Call<ApiResponse<java.util.List<Ticket>>> getTickets(@Header("Authorization") String token,
+                                                          @Query("organization_id") String organizationId,
+                                                          @Query("team_id") String teamId,
+                                                          @Query("assigned_to") String assignedTo,
+                                                          @Query("status") String status,
+                                                          @Query("category") String category,
+                                                          @Query("priority") String priority,
+                                                          @Query("sla_status") String slaStatus,
+                                                          @Query("page") int page,
+                                                          @Query("limit") int limit);
+
+    /**
+     * Get specific ticket details
+     */
+    @GET("tickets/{id}")
+    Call<ApiResponse<Ticket>> getTicket(@Header("Authorization") String token, @Path("id") String ticketId);
+
+    /**
+     * Update ticket information
+     */
+    @PUT("tickets/{id}")
+    Call<ApiResponse<Ticket>> updateTicket(@Header("Authorization") String token, @Path("id") String ticketId, @Body Ticket ticket);
+
+    /**
+     * Delete ticket (org_admin only)
+     */
+    @DELETE("tickets/{id}")
+    Call<ApiResponse<String>> deleteTicket(@Header("Authorization") String token, @Path("id") String ticketId);
+
+    /**
+     * Assign/reassign ticket to agent with enhanced assignment tracking
+     */
+    @POST("tickets/{id}/assign")
+    Call<ApiResponse<Ticket>> assignTicket(@Header("Authorization") String token, @Path("id") String ticketId, @Body AssignTicketRequest request);
+
+    /**
+     * Update ticket status with enhanced status management
+     */
+    @PUT("tickets/{id}/status")
+    Call<ApiResponse<Ticket>> updateTicketStatus(@Header("Authorization") String token, @Path("id") String ticketId, @Body UpdateTicketStatusRequest request);
+
+    /**
+     * Escalate ticket to higher priority/manager
+     */
+    @POST("tickets/{id}/escalate")
+    Call<ApiResponse<Ticket>> escalateTicket(@Header("Authorization") String token, @Path("id") String ticketId, @Body EscalateTicketRequest request);
+
+    /**
+     * Add note to ticket with enhanced note management
+     */
+    @POST("tickets/{id}/notes")
+    Call<ApiResponse<TicketNote>> addTicketNote(@Header("Authorization") String token, @Path("id") String ticketId, @Body TicketNote note);
+
+    /**
+     * Get ticket notes
+     */
+    @GET("tickets/{id}/notes")
+    Call<ApiResponse<java.util.List<TicketNote>>> getTicketNotes(@Header("Authorization") String token, @Path("id") String ticketId);
+
+    /**
+     * Update ticket note
+     */
+    @PUT("tickets/{id}/notes/{noteId}")
+    Call<ApiResponse<TicketNote>> updateTicketNote(@Header("Authorization") String token, @Path("id") String ticketId, @Path("noteId") String noteId, @Body TicketNote note);
+
+    /**
+     * Delete ticket note
+     */
+    @DELETE("tickets/{id}/notes/{noteId}")
+    Call<ApiResponse<String>> deleteTicketNote(@Header("Authorization") String token, @Path("id") String ticketId, @Path("noteId") String noteId);
+
+    /**
+     * Submit customer satisfaction rating
+     */
+    @POST("tickets/{id}/satisfaction")
+    Call<ApiResponse<Ticket>> submitSatisfactionRating(@Header("Authorization") String token, @Path("id") String ticketId, @Body SatisfactionRatingRequest request);
+
+    /**
+     * Get ticket statistics with enhanced analytics
+     */
+    @GET("tickets/stats")
+    Call<ApiResponse<TicketStatsResponse>> getTicketStats(@Header("Authorization") String token,
+                                                          @Query("organization_id") String organizationId,
+                                                          @Query("team_id") String teamId,
+                                                          @Query("user_id") String userId,
+                                                          @Query("period") String period);
+
+    /**
+     * Get ticket analytics with SLA and performance metrics
+     */
+    @GET("tickets/analytics")
+    Call<ApiResponse<TicketAnalytics>> getTicketAnalytics(@Header("Authorization") String token,
+                                                          @Query("organization_id") String organizationId,
+                                                          @Query("team_id") String teamId,
+                                                          @Query("user_id") String userId,
+                                                          @Query("period") String period);
+
+    /**
+     * Get conversion funnel data
+     */
+    @GET("tickets/analytics/conversion")
+    Call<ApiResponse<ConversionAnalytics>> getConversionAnalytics(@Header("Authorization") String token,
+                                                                  @Query("organization_id") String organizationId,
+                                                                  @Query("period") String period);
+
+    /**
+     * Real-time ticket updates via Server-Sent Events (SSE)
+     */
+    @GET("tickets/stream")
+    Call<String> getTicketStream(@Header("Authorization") String token,
+                                @Query("organization_id") String organizationId,
+                                @Query("team_id") String teamId);
+
     // ========== ANALYTICS ENDPOINTS ==========
 
     /**
@@ -568,6 +695,245 @@ public interface ApiService {
         public void setAgentId(String agentId) { this.agentId = agentId; }
         public String getTeamId() { return teamId; }
         public void setTeamId(String teamId) { this.teamId = teamId; }
+    }
+
+    // ========== ENHANCED TICKET REQUEST CLASSES ==========
+
+    class AssignTicketRequest {
+        private String assignedTo;
+        private String assignedTeam;
+        private String assignmentNote;
+
+        public AssignTicketRequest(String assignedTo) {
+            this.assignedTo = assignedTo;
+        }
+
+        public AssignTicketRequest(String assignedTo, String assignedTeam, String assignmentNote) {
+            this.assignedTo = assignedTo;
+            this.assignedTeam = assignedTeam;
+            this.assignmentNote = assignmentNote;
+        }
+
+        // Getters and Setters
+        public String getAssignedTo() { return assignedTo; }
+        public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
+        public String getAssignedTeam() { return assignedTeam; }
+        public void setAssignedTeam(String assignedTeam) { this.assignedTeam = assignedTeam; }
+        public String getAssignmentNote() { return assignmentNote; }
+        public void setAssignmentNote(String assignmentNote) { this.assignmentNote = assignmentNote; }
+    }
+
+    class UpdateTicketStatusRequest {
+        private String status;
+        private String category;
+        private String priority;
+        private String statusNote;
+
+        public UpdateTicketStatusRequest(String status) {
+            this.status = status;
+        }
+
+        public UpdateTicketStatusRequest(String status, String category, String priority, String statusNote) {
+            this.status = status;
+            this.category = category;
+            this.priority = priority;
+            this.statusNote = statusNote;
+        }
+
+        // Getters and Setters
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        public String getCategory() { return category; }
+        public void setCategory(String category) { this.category = category; }
+        public String getPriority() { return priority; }
+        public void setPriority(String priority) { this.priority = priority; }
+        public String getStatusNote() { return statusNote; }
+        public void setStatusNote(String statusNote) { this.statusNote = statusNote; }
+    }
+
+    class EscalateTicketRequest {
+        private String escalatedTo;
+        private String escalationReason;
+        private String priority;
+
+        public EscalateTicketRequest(String escalatedTo, String escalationReason) {
+            this.escalatedTo = escalatedTo;
+            this.escalationReason = escalationReason;
+        }
+
+        public EscalateTicketRequest(String escalatedTo, String escalationReason, String priority) {
+            this.escalatedTo = escalatedTo;
+            this.escalationReason = escalationReason;
+            this.priority = priority;
+        }
+
+        // Getters and Setters
+        public String getEscalatedTo() { return escalatedTo; }
+        public void setEscalatedTo(String escalatedTo) { this.escalatedTo = escalatedTo; }
+        public String getEscalationReason() { return escalationReason; }
+        public void setEscalationReason(String escalationReason) { this.escalationReason = escalationReason; }
+        public String getPriority() { return priority; }
+        public void setPriority(String priority) { this.priority = priority; }
+    }
+
+    class SatisfactionRatingRequest {
+        private int rating;
+        private String feedback;
+
+        public SatisfactionRatingRequest(int rating) {
+            this.rating = rating;
+        }
+
+        public SatisfactionRatingRequest(int rating, String feedback) {
+            this.rating = rating;
+            this.feedback = feedback;
+        }
+
+        // Getters and Setters
+        public int getRating() { return rating; }
+        public void setRating(int rating) { this.rating = rating; }
+        public String getFeedback() { return feedback; }
+        public void setFeedback(String feedback) { this.feedback = feedback; }
+    }
+
+    // ========== ENHANCED RESPONSE CLASSES ==========
+
+    class TicketStatsResponse {
+        private int totalTickets;
+        private int openTickets;
+        private int inProgressTickets;
+        private int resolvedTickets;
+        private int closedTickets;
+        private int escalatedTickets;
+        private int slaBreachedTickets;
+        private double averageResolutionTime;
+        private double averageSatisfactionRating;
+        private java.util.List<CategoryStats> categoryStats;
+        private java.util.List<PriorityStats> priorityStats;
+
+        // Getters and Setters
+        public int getTotalTickets() { return totalTickets; }
+        public void setTotalTickets(int totalTickets) { this.totalTickets = totalTickets; }
+        public int getOpenTickets() { return openTickets; }
+        public void setOpenTickets(int openTickets) { this.openTickets = openTickets; }
+        public int getInProgressTickets() { return inProgressTickets; }
+        public void setInProgressTickets(int inProgressTickets) { this.inProgressTickets = inProgressTickets; }
+        public int getResolvedTickets() { return resolvedTickets; }
+        public void setResolvedTickets(int resolvedTickets) { this.resolvedTickets = resolvedTickets; }
+        public int getClosedTickets() { return closedTickets; }
+        public void setClosedTickets(int closedTickets) { this.closedTickets = closedTickets; }
+        public int getEscalatedTickets() { return escalatedTickets; }
+        public void setEscalatedTickets(int escalatedTickets) { this.escalatedTickets = escalatedTickets; }
+        public int getSlaBreachedTickets() { return slaBreachedTickets; }
+        public void setSlaBreachedTickets(int slaBreachedTickets) { this.slaBreachedTickets = slaBreachedTickets; }
+        public double getAverageResolutionTime() { return averageResolutionTime; }
+        public void setAverageResolutionTime(double averageResolutionTime) { this.averageResolutionTime = averageResolutionTime; }
+        public double getAverageSatisfactionRating() { return averageSatisfactionRating; }
+        public void setAverageSatisfactionRating(double averageSatisfactionRating) { this.averageSatisfactionRating = averageSatisfactionRating; }
+        public java.util.List<CategoryStats> getCategoryStats() { return categoryStats; }
+        public void setCategoryStats(java.util.List<CategoryStats> categoryStats) { this.categoryStats = categoryStats; }
+        public java.util.List<PriorityStats> getPriorityStats() { return priorityStats; }
+        public void setPriorityStats(java.util.List<PriorityStats> priorityStats) { this.priorityStats = priorityStats; }
+
+        public static class CategoryStats {
+            private String category;
+            private int count;
+            private double averageResolutionTime;
+
+            // Getters and Setters
+            public String getCategory() { return category; }
+            public void setCategory(String category) { this.category = category; }
+            public int getCount() { return count; }
+            public void setCount(int count) { this.count = count; }
+            public double getAverageResolutionTime() { return averageResolutionTime; }
+            public void setAverageResolutionTime(double averageResolutionTime) { this.averageResolutionTime = averageResolutionTime; }
+        }
+
+        public static class PriorityStats {
+            private String priority;
+            private int count;
+            private double averageResolutionTime;
+
+            // Getters and Setters
+            public String getPriority() { return priority; }
+            public void setPriority(String priority) { this.priority = priority; }
+            public int getCount() { return count; }
+            public void setCount(int count) { this.count = count; }
+            public double getAverageResolutionTime() { return averageResolutionTime; }
+            public void setAverageResolutionTime(double averageResolutionTime) { this.averageResolutionTime = averageResolutionTime; }
+        }
+    }
+
+    // CRM Ticket Analytics response classes
+    class TicketAnalytics {
+        private int totalTickets;
+        private int newTickets;
+        private int inProgressTickets;
+        private int closedTickets;
+        private double conversionRate;
+        private double averageResponseTime;
+        private java.util.List<StageStats> stageStats;
+
+        // Getters and Setters
+        public int getTotalTickets() { return totalTickets; }
+        public void setTotalTickets(int totalTickets) { this.totalTickets = totalTickets; }
+        public int getNewTickets() { return newTickets; }
+        public void setNewTickets(int newTickets) { this.newTickets = newTickets; }
+        public int getInProgressTickets() { return inProgressTickets; }
+        public void setInProgressTickets(int inProgressTickets) { this.inProgressTickets = inProgressTickets; }
+        public int getClosedTickets() { return closedTickets; }
+        public void setClosedTickets(int closedTickets) { this.closedTickets = closedTickets; }
+        public double getConversionRate() { return conversionRate; }
+        public void setConversionRate(double conversionRate) { this.conversionRate = conversionRate; }
+        public double getAverageResponseTime() { return averageResponseTime; }
+        public void setAverageResponseTime(double averageResponseTime) { this.averageResponseTime = averageResponseTime; }
+        public java.util.List<StageStats> getStageStats() { return stageStats; }
+        public void setStageStats(java.util.List<StageStats> stageStats) { this.stageStats = stageStats; }
+
+        public static class StageStats {
+            private String stage;
+            private int count;
+            private double percentage;
+
+            // Getters and Setters
+            public String getStage() { return stage; }
+            public void setStage(String stage) { this.stage = stage; }
+            public int getCount() { return count; }
+            public void setCount(int count) { this.count = count; }
+            public double getPercentage() { return percentage; }
+            public void setPercentage(double percentage) { this.percentage = percentage; }
+        }
+    }
+
+    class ConversionAnalytics {
+        private String organizationId;
+        private String period;
+        private java.util.List<ConversionStage> conversionFunnel;
+        private double overallConversionRate;
+
+        // Getters and Setters
+        public String getOrganizationId() { return organizationId; }
+        public void setOrganizationId(String organizationId) { this.organizationId = organizationId; }
+        public String getPeriod() { return period; }
+        public void setPeriod(String period) { this.period = period; }
+        public java.util.List<ConversionStage> getConversionFunnel() { return conversionFunnel; }
+        public void setConversionFunnel(java.util.List<ConversionStage> conversionFunnel) { this.conversionFunnel = conversionFunnel; }
+        public double getOverallConversionRate() { return overallConversionRate; }
+        public void setOverallConversionRate(double overallConversionRate) { this.overallConversionRate = overallConversionRate; }
+
+        public static class ConversionStage {
+            private String stage;
+            private int count;
+            private double conversionRate;
+
+            // Getters and Setters
+            public String getStage() { return stage; }
+            public void setStage(String stage) { this.stage = stage; }
+            public int getCount() { return count; }
+            public void setCount(int count) { this.count = count; }
+            public double getConversionRate() { return conversionRate; }
+            public void setConversionRate(double conversionRate) { this.conversionRate = conversionRate; }
+        }
     }
 
     // Analytics response classes

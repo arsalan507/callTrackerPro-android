@@ -21,6 +21,14 @@
     <!-- Call permissions for dialer functionality -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!-- CRM Enhancement: Additional permissions for comprehensive ticket system -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!-- Add hardware feature declaration for telephony -->
     <uses-feature
         android:name="android.hardware.telephony"
@@ -103,6 +111,65 @@
             android:exported="false"
             android:theme="@style/Theme.TeleCRM"
             android:label="CallTracker Pro Dashboard" />
+
+        <!-- CRM Enhancement: Ticket Management Activities -->
+        <activity
+            android:name=".activities.TicketDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM.NoActionBar"
+            android:label="Ticket Details"
+            android:parentActivityName=".DashboardRouterActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.TicketCreateActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TeleCRM"
+            android:label="Create Ticket"
+            android:parentActivityName=".DashboardRouterActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- CRM Enhancement: Background Services -->
+        <service
+            android:name=".services.CallReceiverService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall" />
+
+        <service
+            android:name=".services.NotificationService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- Real-time notification service for Server-Sent Events -->
+        <service
+            android:name=".services.RealTimeNotificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- CRM Enhancement: Broadcast Receivers -->
+        <receiver
+            android:name=".receivers.CallReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
