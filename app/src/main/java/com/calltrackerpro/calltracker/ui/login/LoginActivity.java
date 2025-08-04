@@ -248,7 +248,8 @@ public class LoginActivity extends AppCompatActivity {
                                 
                                 // After 3 failed attempts, suggest offline mode
                                 runOnUiThread(() -> {
-                                    if (email.contains("demo") || email.contains("test") || email.contains("anas")) {
+                                    String currentEmail = usernameEditText.getText().toString().trim();
+                                    if (currentEmail.contains("demo") || currentEmail.contains("test") || currentEmail.contains("anas")) {
                                         showOfflineModeDialog();
                                     }
                                 });
@@ -340,9 +341,11 @@ public class LoginActivity extends AppCompatActivity {
         // Create a mock user for testing when backend is unreachable
         Log.d(TAG, "Creating mock login for testing...");
         
+        String userEmail = usernameEditText.getText().toString().trim();
+        
         com.calltrackerpro.calltracker.models.User mockUser = new com.calltrackerpro.calltracker.models.User();
         mockUser.setId("mock-user-123");
-        mockUser.setEmail(email);
+        mockUser.setEmail(userEmail);
         mockUser.setFullName("Demo User");
         mockUser.setRole("org_admin");
         mockUser.setOrganizationId("demo-org-123");
