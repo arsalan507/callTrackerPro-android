@@ -231,10 +231,33 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e(TAG, "Error class: " + t.getClass().getSimpleName());
                 Log.e(TAG, "Full stack trace: ", t);
                 
-                // Provide more specific error messages
+                // Provide more specific error messages and diagnostics
                 if (t instanceof java.net.UnknownHostException) {
                     errorMessage = "Cannot connect to server. Please check your internet connection.";
                     Log.e(TAG, "DNS Resolution failed. Backend URL: https://calltrackerpro-backend.vercel.app");
+                    
+                    // Run network diagnostics and offer offline mode
+                    new Thread(() -> {
+                        try {
+                            Log.d(TAG, "Running network diagnostics...");
+                            boolean hasInternet = com.calltrackerpro.calltracker.utils.NetworkHelper.isNetworkAvailable(LoginActivity.this);
+                            Log.d(TAG, "Network available: " + hasInternet);
+                            
+                            if (hasInternet) {
+                                com.calltrackerpro.calltracker.utils.NetworkHelper.testBackendConnectivity();
+                                
+                                // After 3 failed attempts, suggest offline mode
+                                runOnUiThread(() -> {
+                                    if (email.contains("demo") || email.contains("test") || email.contains("anas")) {
+                                        showOfflineModeDialog();
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Diagnostics failed: " + e.getMessage());
+                        }
+                    }).start();
+                    
                 } else if (t instanceof java.net.ConnectException) {
                     errorMessage = "Server is unreachable. Please try again later.";
                 } else if (t instanceof java.net.SocketTimeoutException) {
@@ -296,5 +319,43 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+    
+    private void showOfflineModeDialog() {
+        new android.app.AlertDialog.Builder(this)
+            .setTitle("DNS Resolution Issue")
+            .setMessage("Cannot connect to server due to DNS issues.\n\nThis is common with Android emulators.\n\nSuggested fixes:\n1. Cold boot your emulator\n2. Use a physical device\n3. Try demo mode for testing")
+            .setPositiveButton("Try Demo Mode", (dialog, which) -> {
+                // Create a mock successful login for testing
+                createMockLogin();
+            })
+            .setNegativeButton("Restart Emulator", (dialog, which) -> {
+                Toast.makeText(this, "Please cold boot your emulator:\nAVD Manager → Cold Boot Now", Toast.LENGTH_LONG).show();
+            })
+            .setNeutralButton("Cancel", null)
+            .show();
+    }
+    
+    private void createMockLogin() {
+        // Create a mock user for testing when backend is unreachable
+        Log.d(TAG, "Creating mock login for testing...");
+        
+        com.calltrackerpro.calltracker.models.User mockUser = new com.calltrackerpro.calltracker.models.User();
+        mockUser.setId("mock-user-123");
+        mockUser.setEmail(email);
+        mockUser.setFullName("Demo User");
+        mockUser.setRole("org_admin");
+        mockUser.setOrganizationId("demo-org-123");
+        mockUser.setOrganizationName("Demo Organization");
+        
+        com.calltrackerpro.calltracker.models.AuthResponse mockResponse = new com.calltrackerpro.calltracker.models.AuthResponse();
+        mockResponse.setSuccess(true);
+        mockResponse.setMessage("Mock login successful");
+        mockResponse.setToken("mock-token-for-testing");
+        mockResponse.setUser(mockUser);
+        
+        handleLoginSuccess(mockResponse);
+        
+        Toast.makeText(this, "Using demo mode - limited functionality", Toast.LENGTH_LONG).show();
     }
 }

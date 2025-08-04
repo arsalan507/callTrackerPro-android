@@ -30,7 +30,9 @@ import java.util.concurrent.TimeUnit;
 public interface ApiService {
 
     // ========== BASE URL - UPDATE THIS TO YOUR BACKEND ==========
-    String BASE_URL = "https://calltrackerpro-backend.vercel.app/api/"; // For Android emulator
+    String BASE_URL = "https://calltrackerpro-backend.vercel.app/api/"; // Primary backend URL
+    String FALLBACK_URL_IP = "https://76.76.21.21/api/"; // Fallback IP address (Vercel CDN)
+    String FALLBACK_URL_IP2 = "https://64.29.17.131/api/"; // Alternative IP address
     // String BASE_URL = "http://192.168.1.XXX:5000/api/"; // For real device - replace XXX with your IP
 
     /**
@@ -518,12 +520,14 @@ public interface ApiService {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            // Create OkHttp client with logging
+            // Create OkHttp client with enhanced DNS and network handling
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(logging)
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(45, TimeUnit.SECONDS)  // Increased timeout for DNS resolution
+                    .readTimeout(45, TimeUnit.SECONDS)
+                    .writeTimeout(45, TimeUnit.SECONDS)
+                    .callTimeout(60, TimeUnit.SECONDS)     // Overall call timeout
+                    .retryOnConnectionFailure(true)        // Retry on connection failures
                     .build();
 
             // Create Retrofit instance
