@@ -6,6 +6,7 @@ public class PermissionManager {
     
     // Organization Management Permissions
     public static final String MANAGE_USERS = "manage_users";
+    public static final String VIEW_USERS = "view_users";
     public static final String INVITE_USERS = "invite_users";
     public static final String DELETE_USERS = "delete_users";
     public static final String MANAGE_TEAMS = "manage_teams";
@@ -45,6 +46,12 @@ public class PermissionManager {
     // Organization Admin permissions
     public boolean canManageUsers() {
         return currentUser.isOrganizationAdmin() || currentUser.hasPermission(MANAGE_USERS);
+    }
+    
+    public boolean canViewUsers() {
+        return currentUser.isOrganizationAdmin() || 
+               currentUser.isManager() || 
+               currentUser.hasPermission(VIEW_USERS);
     }
     
     public boolean canInviteUsers() {

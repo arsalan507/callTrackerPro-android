@@ -164,6 +164,13 @@ public class TokenManager {
             Log.e(TAG, "❌ Error clearing auth data: " + e.getMessage());
         }
     }
+    
+    /**
+     * Alias for clearAuthData() - Clear all tokens and user data
+     */
+    public void clearTokens() {
+        clearAuthData();
+    }
 
     /**
      * Update user data (useful for profile updates)

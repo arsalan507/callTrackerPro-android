@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:id="@+id/action_view_details"
+        android:title="View Details"
+        android:icon="@drawable/ic_analytics" />
+    
+    <item
+        android:id="@+id/action_view_users"
+        android:title="View Users"
+        android:icon="@drawable/ic_people" />
+    
+    <item
+        android:id="@+id/action_view_analytics"
+        android:title="View Analytics"
+        android:icon="@drawable/ic_analytics" />
+    
+    <item
+        android:id="@+id/action_activate_org"
+        android:title="Activate Organization"
+        android:icon="@drawable/ic_refresh" />
+    
+    <item
+        android:id="@+id/action_suspend_org"
+        android:title="Suspend Organization"
+        android:icon="@drawable/ic_delete" />
+    
+</menu>

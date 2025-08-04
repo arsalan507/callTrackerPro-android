@@ -169,17 +169,17 @@
             android:background="@drawable/primary_button_background"
             android:layout_marginBottom="16dp" />
 
-        <!-- Demo Mode Button - Hidden -->
+        <!-- Test Login Button - For testing with working credentials -->
         <Button
             android:id="@+id/demo_mode"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="@string/action_demo_mode"
+            android:text="🧪 Test Login (anas@anas.com)"
             android:textColor="#4FC3F7"
             android:textSize="16sp"
             android:background="@drawable/demo_button_background"
             android:layout_marginBottom="24dp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <!-- Progress Bar -->
         <ProgressBar

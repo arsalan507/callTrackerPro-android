@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="👥 User Management"
+            android:text="🏢 Organization Management"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_margin="16dp" />
@@ -30,13 +30,13 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search users..."
+                android:hint="Search organizations..."
                 app:startIconDrawable="@android:drawable/ic_menu_search"
                 app:endIconMode="clear_text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearchUsers"
+                    android:id="@+id/etSearchOrganizations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -44,16 +44,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Role Filter Chips -->
+            <!-- Status Filter Chips -->
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupRoles"
+                android:id="@+id/chipGroupStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAll"
+                    android:id="@+id/chipAllOrgs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All"
@@ -61,24 +61,24 @@
                     style="@style/Widget.MaterialComponents.Chip.Filter" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAgents"
+                    android:id="@+id/chipActive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Agents"
+                    android:text="Active"
                     style="@style/Widget.MaterialComponents.Chip.Filter" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipManagers"
+                    android:id="@+id/chipTrial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Managers"
+                    android:text="Trial"
                     style="@style/Widget.MaterialComponents.Chip.Filter" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAdmins"
+                    android:id="@+id/chipSuspended"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Admins"
+                    android:text="Suspended"
                     style="@style/Widget.MaterialComponents.Chip.Filter" />
 
             </com.google.android.material.chip.ChipGroup>
@@ -91,25 +91,26 @@
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerUsers"
+                android:id="@+id/recyclerOrganizations"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingBottom="80dp"
-                tools:listitem="@layout/item_user" />
+                tools:listitem="@layout/item_organization_management" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddUser"
+        android:id="@+id/fabAddOrganization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        android:contentDescription="Add User"
-        app:tint="@android:color/white" />
+        android:contentDescription="Add Organization"
+        app:tint="@android:color/white"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

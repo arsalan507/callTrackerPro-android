@@ -9,6 +9,7 @@ import com.calltrackerpro.calltracker.models.Team;
 import com.calltrackerpro.calltracker.models.Contact;
 import com.calltrackerpro.calltracker.models.Ticket;
 import com.calltrackerpro.calltracker.models.TicketNote;
+import com.calltrackerpro.calltracker.models.DashboardStats;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -29,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 public interface ApiService {
 
     // ========== BASE URL - UPDATE THIS TO YOUR BACKEND ==========
-    String BASE_URL = "https://calltrackerpro-backend.vercel.app/"; // For Android emulator
-    // String BASE_URL = "http://192.168.1.XXX:5000/"; // For real device - replace XXX with your IP
+    String BASE_URL = "https://calltrackerpro-backend.vercel.app/api/"; // For Android emulator
+    // String BASE_URL = "http://192.168.1.XXX:5000/api/"; // For real device - replace XXX with your IP
 
     /**
      * Test API connection - WORKING ✅
@@ -55,6 +56,24 @@ public interface ApiService {
      */
     @POST("call-logs")
     Call<ApiResponse<CallLog>> createCallLog(@Header("Authorization") String token, @Body CallLog callLog);
+
+    /**
+     * Create call log with automatic ticket creation - NEW ✅
+     */
+    @POST("call-logs")
+    Call<ApiResponse<CallLogWithTicketResponse>> createCallLogWithTicket(@Header("Authorization") String token, @Body CreateCallLogRequest request);
+
+    /**
+     * Get call history for a phone number - NEW ✅
+     */
+    @GET("call-logs/history/{phoneNumber}")
+    Call<ApiResponse<CallHistoryResponse>> getCallHistory(@Header("Authorization") String token, @Path("phoneNumber") String phoneNumber);
+
+    /**
+     * Get call analytics/stats - NEW ✅
+     */
+    @GET("call-logs/analytics/stats")
+    Call<ApiResponse<CallAnalyticsResponse>> getCallAnalytics(@Header("Authorization") String token);
 
     // ========== AUTH ENDPOINTS ==========
 
@@ -428,6 +447,55 @@ public interface ApiService {
      */
     @GET("analytics/dashboard")
     Call<ApiResponse<DashboardSummary>> getDashboardSummary(@Header("Authorization") String token, @Query("organization_id") String organizationId);
+
+    // ========== ENHANCED DASHBOARD ENDPOINTS ==========
+
+    /**
+     * Get comprehensive dashboard statistics
+     */
+    @GET("dashboard/stats")
+    Call<ApiResponse<DashboardStats>> getDashboardStats(@Header("Authorization") String token, 
+                                                        @Query("organization_id") String organizationId,
+                                                        @Query("period") String period);
+
+    /**
+     * Get real-time dashboard data
+     */
+    @GET("dashboard/realtime")
+    Call<ApiResponse<DashboardStats>> getRealtimeDashboardData(@Header("Authorization") String token, 
+                                                               @Query("organization_id") String organizationId);
+
+    /**
+     * Get super admin dashboard (all organizations)
+     */
+    @GET("super-admin/dashboard")
+    Call<ApiResponse<SuperAdminDashboard>> getSuperAdminDashboard(@Header("Authorization") String token);
+
+    /**
+     * Get users for super admin dashboard
+     */
+    @GET("super-admin/users")
+    Call<ApiResponse<java.util.List<User>>> getSuperAdminUsers(@Header("Authorization") String token, 
+                                                               @Query("page") int page,
+                                                               @Query("limit") int limit,
+                                                               @Query("search") String search);
+
+    /**
+     * Get organizations for super admin
+     */
+    @GET("super-admin/organizations")
+    Call<ApiResponse<java.util.List<Organization>>> getSuperAdminOrganizations(@Header("Authorization") String token,
+                                                                               @Query("page") int page,
+                                                                               @Query("limit") int limit,
+                                                                               @Query("status") String status);
+
+    /**
+     * Update organization status (super admin only)
+     */
+    @PUT("super-admin/organizations/{id}/status")
+    Call<ApiResponse<Organization>> updateOrganizationStatus(@Header("Authorization") String token,
+                                                             @Path("id") String organizationId,
+                                                             @Body OrganizationStatusRequest request);
 
     // ========== RETROFIT CLIENT BUILDER ==========
 
@@ -1022,4 +1090,205 @@ public interface ApiService {
         public CallAnalytics getRecentCallStats() { return recentCallStats; }
         public void setRecentCallStats(CallAnalytics recentCallStats) { this.recentCallStats = recentCallStats; }
     }
+
+    // ========== ENHANCED DASHBOARD RESPONSE CLASSES ==========
+
+    class SuperAdminDashboard {
+        private int totalOrganizations;
+        private int activeOrganizations;
+        private int totalUsers;
+        private int activeUsers;
+        private java.util.List<OrganizationSummary> organizationSummaries;
+        private java.util.List<DashboardStats.ActivityItem> recentActivity;
+
+        // Getters and Setters
+        public int getTotalOrganizations() { return totalOrganizations; }
+        public void setTotalOrganizations(int totalOrganizations) { this.totalOrganizations = totalOrganizations; }
+        
+        public int getActiveOrganizations() { return activeOrganizations; }
+        public void setActiveOrganizations(int activeOrganizations) { this.activeOrganizations = activeOrganizations; }
+        
+        public int getTotalUsers() { return totalUsers; }
+        public void setTotalUsers(int totalUsers) { this.totalUsers = totalUsers; }
+        
+        public int getActiveUsers() { return activeUsers; }
+        public void setActiveUsers(int activeUsers) { this.activeUsers = activeUsers; }
+        
+        public java.util.List<OrganizationSummary> getOrganizationSummaries() { return organizationSummaries; }
+        public void setOrganizationSummaries(java.util.List<OrganizationSummary> organizationSummaries) { this.organizationSummaries = organizationSummaries; }
+        
+        public java.util.List<DashboardStats.ActivityItem> getRecentActivity() { return recentActivity; }
+        public void setRecentActivity(java.util.List<DashboardStats.ActivityItem> recentActivity) { this.recentActivity = recentActivity; }
+
+        public static class OrganizationSummary {
+            private String id;
+            private String name;
+            private String status;
+            private int userCount;
+            private int ticketCount;
+            private String subscriptionStatus;
+            private String lastActivity;
+
+            // Getters and Setters
+            public String getId() { return id; }
+            public void setId(String id) { this.id = id; }
+            
+            public String getName() { return name; }
+            public void setName(String name) { this.name = name; }
+            
+            public String getStatus() { return status; }
+            public void setStatus(String status) { this.status = status; }
+            
+            public int getUserCount() { return userCount; }
+            public void setUserCount(int userCount) { this.userCount = userCount; }
+            
+            public int getTicketCount() { return ticketCount; }
+            public void setTicketCount(int ticketCount) { this.ticketCount = ticketCount; }
+            
+            public String getSubscriptionStatus() { return subscriptionStatus; }
+            public void setSubscriptionStatus(String subscriptionStatus) { this.subscriptionStatus = subscriptionStatus; }
+            
+            public String getLastActivity() { return lastActivity; }
+            public void setLastActivity(String lastActivity) { this.lastActivity = lastActivity; }
+        }
+    }
+
+    class OrganizationStatusRequest {
+        private String status;
+        private String reason;
+
+        public OrganizationStatusRequest(String status) {
+            this.status = status;
+        }
+
+        public OrganizationStatusRequest(String status, String reason) {
+            this.status = status;
+            this.reason = reason;
+        }
+
+        // Getters and Setters
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        
+        public String getReason() { return reason; }
+        public void setReason(String reason) { this.reason = reason; }
+    }
+
+    // ========== NEW CALL LOGGING REQUEST/RESPONSE CLASSES ==========
+    
+    class CreateCallLogRequest {
+        private String phone_number;
+        private String type; // "inbound" or "outbound"
+        private int duration; // in seconds
+        private String status; // "completed", "missed", "busy"
+        private String caller_name;
+        private String notes;
+        private boolean auto_create_ticket; // NEW: triggers automatic ticket creation
+        
+        public CreateCallLogRequest(String phoneNumber, String type, int duration, String status, String callerName, String notes, boolean autoCreateTicket) {
+            this.phone_number = phoneNumber;
+            this.type = type;
+            this.duration = duration;
+            this.status = status;
+            this.caller_name = callerName;
+            this.notes = notes;
+            this.auto_create_ticket = autoCreateTicket;
+        }
+        
+        // Getters and Setters
+        public String getPhone_number() { return phone_number; }
+        public void setPhone_number(String phone_number) { this.phone_number = phone_number; }
+        
+        public String getType() { return type; }
+        public void setType(String type) { this.type = type; }
+        
+        public int getDuration() { return duration; }
+        public void setDuration(int duration) { this.duration = duration; }
+        
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        
+        public String getCaller_name() { return caller_name; }
+        public void setCaller_name(String caller_name) { this.caller_name = caller_name; }
+        
+        public String getNotes() { return notes; }
+        public void setNotes(String notes) { this.notes = notes; }
+        
+        public boolean isAuto_create_ticket() { return auto_create_ticket; }
+        public void setAuto_create_ticket(boolean auto_create_ticket) { this.auto_create_ticket = auto_create_ticket; }
+    }
+    
+    class CallLogWithTicketResponse {
+        private CallLog call_log;
+        private Ticket ticket; // Created ticket if auto_create_ticket was true
+        private java.util.List<CallLog> call_history; // Previous calls from this number
+        
+        // Getters and Setters
+        public CallLog getCall_log() { return call_log; }
+        public void setCall_log(CallLog call_log) { this.call_log = call_log; }
+        
+        public Ticket getTicket() { return ticket; }
+        public void setTicket(Ticket ticket) { this.ticket = ticket; }
+        
+        public java.util.List<CallLog> getCall_history() { return call_history; }
+        public void setCall_history(java.util.List<CallLog> call_history) { this.call_history = call_history; }
+    }
+    
+    class CallHistoryResponse {
+        private Contact contact;
+        private java.util.List<CallLog> call_history;
+        private java.util.List<Ticket> related_tickets;
+        
+        // Getters and Setters
+        public Contact getContact() { return contact; }
+        public void setContact(Contact contact) { this.contact = contact; }
+        
+        public java.util.List<CallLog> getCall_history() { return call_history; }
+        public void setCall_history(java.util.List<CallLog> call_history) { this.call_history = call_history; }
+        
+        public java.util.List<Ticket> getRelated_tickets() { return related_tickets; }
+        public void setRelated_tickets(java.util.List<Ticket> related_tickets) { this.related_tickets = related_tickets; }
+    }
+    
+    class CallAnalyticsResponse {
+        private int total_calls;
+        private int inbound_calls;
+        private int outbound_calls;
+        private int missed_calls;
+        private double average_duration;
+        private int tickets_created;
+        private CallsByDay calls_by_day;
+        
+        // Getters and Setters
+        public int getTotal_calls() { return total_calls; }
+        public void setTotal_calls(int total_calls) { this.total_calls = total_calls; }
+        
+        public int getInbound_calls() { return inbound_calls; }
+        public void setInbound_calls(int inbound_calls) { this.inbound_calls = inbound_calls; }
+        
+        public int getOutbound_calls() { return outbound_calls; }
+        public void setOutbound_calls(int outbound_calls) { this.outbound_calls = outbound_calls; }
+        
+        public int getMissed_calls() { return missed_calls; }
+        public void setMissed_calls(int missed_calls) { this.missed_calls = missed_calls; }
+        
+        public double getAverage_duration() { return average_duration; }
+        public void setAverage_duration(double average_duration) { this.average_duration = average_duration; }
+        
+        public int getTickets_created() { return tickets_created; }
+        public void setTickets_created(int tickets_created) { this.tickets_created = tickets_created; }
+        
+        public CallsByDay getCalls_by_day() { return calls_by_day; }
+        public void setCalls_by_day(CallsByDay calls_by_day) { this.calls_by_day = calls_by_day; }
+    }
+    
+    class CallsByDay {
+        private java.util.Map<String, Integer> daily_counts;
+        
+        public java.util.Map<String, Integer> getDaily_counts() { return daily_counts; }
+        public void setDaily_counts(java.util.Map<String, Integer> daily_counts) { this.daily_counts = daily_counts; }
+    }
+
+    // ========== NEW SUPABASE BACKEND RESPONSE CLASSES ==========
+    
 }

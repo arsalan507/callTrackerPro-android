@@ -1,13 +1,15 @@
 package com.calltrackerpro.calltracker.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Ticket {
+public class Ticket implements Serializable {
+    private static final long serialVersionUID = 1L;
     @SerializedName("_id")
     private String id;
 
@@ -367,6 +369,10 @@ public class Ticket {
     // Utility Methods
     public String getDisplayName() {
         return contactName != null && !contactName.isEmpty() ? contactName : phoneNumber;
+    }
+
+    public String getCustomerPhone() {
+        return phoneNumber;
     }
 
     public String getFormattedDuration() {

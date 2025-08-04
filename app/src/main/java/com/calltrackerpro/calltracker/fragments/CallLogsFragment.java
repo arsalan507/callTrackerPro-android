@@ -188,8 +188,67 @@ public class CallLogsFragment extends Fragment implements CallLogsAdapter.OnCall
 
     @Override
     public void onCallLogClick(CallLog callLog) {
-        // Show options dialog: View Details, Create Ticket, Call Back
+        // Show options dialog: View Details, Create Ticket, Call Back, Call History
         showCallLogOptionsDialog(callLog);
+    }
+
+    /**
+     * NEW: Get call history for a specific phone number
+     */
+    public void showCallHistory(String phoneNumber) {
+        if (currentUser == null || phoneNumber == null) return;
+
+        String authToken = "Bearer " + tokenManager.getToken();
+        Call<ApiResponse<ApiService.CallHistoryResponse>> call = apiService.getCallHistory(authToken, phoneNumber);
+
+        call.enqueue(new Callback<ApiResponse<ApiService.CallHistoryResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<ApiService.CallHistoryResponse>> call, Response<ApiResponse<ApiService.CallHistoryResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<ApiService.CallHistoryResponse> apiResponse = response.body();
+
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        ApiService.CallHistoryResponse data = apiResponse.getData();
+                        displayCallHistoryDialog(phoneNumber, data);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<ApiService.CallHistoryResponse>> call, Throwable t) {
+                Log.e(TAG, "Error fetching call history: " + t.getMessage());
+                Toast.makeText(getContext(), "Error loading call history", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void displayCallHistoryDialog(String phoneNumber, ApiService.CallHistoryResponse historyData) {
+        StringBuilder historyText = new StringBuilder();
+        historyText.append("Call History for ").append(phoneNumber).append("\n\n");
+
+        if (historyData.getContact() != null) {
+            historyText.append("Contact: ").append(historyData.getContact().getFullName()).append("\n");
+            historyText.append("Status: ").append(historyData.getContact().getStatus()).append("\n\n");
+        }
+
+        historyText.append("Previous Calls (").append(historyData.getCall_history().size()).append("):\n");
+        for (CallLog call : historyData.getCall_history()) {
+            historyText.append("• ").append(call.getCallType()).append(" - ")
+                    .append(call.getCallStatus()).append(" (").append(call.getDuration()).append("s)\n");
+        }
+
+        if (!historyData.getRelated_tickets().isEmpty()) {
+            historyText.append("\nRelated Tickets (").append(historyData.getRelated_tickets().size()).append("):\n");
+            for (Ticket ticket : historyData.getRelated_tickets()) {
+                historyText.append("• ").append(ticket.getTicketId()).append(" (").append(ticket.getStatus()).append(")\n");
+            }
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Call History")
+                .setMessage(historyText.toString())
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     @Override

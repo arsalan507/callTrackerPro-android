@@ -1,9 +1,11 @@
 package com.calltrackerpro.calltracker.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.List;
 
-public class Contact {
+public class Contact implements Serializable {
+    private static final long serialVersionUID = 1L;
     @SerializedName("_id")
     private String id;
 

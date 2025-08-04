@@ -55,6 +55,41 @@ public class Organization {
 
     public OrganizationAnalytics getAnalytics() { return analytics; }
     public void setAnalytics(OrganizationAnalytics analytics) { this.analytics = analytics; }
+    
+    // Convenience methods for easier access to nested properties
+    public String getSubscriptionStatus() {
+        return subscription != null ? subscription.getStatus() : "unknown";
+    }
+    
+    public String getSubscriptionPlan() {
+        return subscription != null ? subscription.getPlan() : "No Plan";
+    }
+    
+    public int getUserLimit() {
+        return subscription != null ? subscription.getUserLimit() : 0;
+    }
+    
+    public int getCallLimit() {
+        return subscription != null ? subscription.getCallLimit() : 0;
+    }
+    
+    public boolean isActive() {
+        return subscription != null && subscription.isActive();
+    }
+    
+    public int getUserCount() {
+        return analytics != null ? analytics.getTotalUsers() : 0;
+    }
+    
+    public int getTicketCount() {
+        // TODO: Add ticket count to analytics when available from backend
+        return 0; // Placeholder
+    }
+    
+    public String getLastActivity() {
+        // TODO: Add last activity tracking to organization model
+        return null; // Placeholder
+    }
 
     // Inner classes for nested objects
     public static class Subscription {

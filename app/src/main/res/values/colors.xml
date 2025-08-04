@@ -26,4 +26,26 @@
     <color name="status_qualified">#FF4CAF50</color>
     <color name="status_converted">#FF00BCD4</color>
     <color name="status_closed">#FF9E9E9E</color>
+    
+    <!-- Enhanced Dashboard Colors -->
+    <color name="primary_color">#FF1976D2</color>
+    <color name="secondary_color">#FF424242</color>
+    <color name="info_color">#FF2196F3</color>
+    <color name="warning_color">#FFFF9800</color>
+    <color name="error_color">#FFF44336</color>
+    <color name="surface_color">#FFFFFFFF</color>
+    <color name="on_surface_color">#FF212121</color>
+    <color name="on_surface_variant_color">#FF757575</color>
+    
+    <!-- Role Colors -->
+    <color name="role_super_admin">#FF673AB7</color>
+    <color name="role_org_admin">#FF3F51B5</color>
+    <color name="role_manager">#FF2196F3</color>
+    <color name="role_agent">#FF4CAF50</color>
+    <color name="role_viewer">#FF9E9E9E</color>
+    <color name="role_default">#FF424242</color>
+    
+    <!-- Status Colors -->
+    <color name="success_green">#FF4CAF50</color>
+    <color name="error_red">#FFF44336</color>
 </resources>

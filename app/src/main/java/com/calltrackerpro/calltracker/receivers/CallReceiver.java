@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.calltrackerpro.calltracker.services.CallReceiverService;
+import com.calltrackerpro.calltracker.services.EnhancedCallService;
 
 public class CallReceiver extends BroadcastReceiver {
     private static final String TAG = "CallReceiver";
@@ -48,6 +49,13 @@ public class CallReceiver extends BroadcastReceiver {
             serviceIntent.putExtra("phoneNumber", incomingPhoneNumber);
             serviceIntent.putExtra("callType", "incoming");
             context.startForegroundService(serviceIntent);
+            
+            // NEW: Start enhanced call service for call history and preparation
+            Intent enhancedServiceIntent = new Intent(context, EnhancedCallService.class);
+            enhancedServiceIntent.setAction(EnhancedCallService.ACTION_CALL_STARTED);
+            enhancedServiceIntent.putExtra("phoneNumber", incomingPhoneNumber);
+            enhancedServiceIntent.putExtra("callType", "inbound");
+            context.startService(enhancedServiceIntent);
 
         } else if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state)) {
             // Call answered
@@ -75,6 +83,15 @@ public class CallReceiver extends BroadcastReceiver {
                     serviceIntent.putExtra("callStatus", "completed");
                     context.startForegroundService(serviceIntent);
                     
+                    // NEW: Enhanced call service for automatic ticket creation
+                    Intent enhancedServiceIntent = new Intent(context, EnhancedCallService.class);
+                    enhancedServiceIntent.setAction(EnhancedCallService.ACTION_CALL_ENDED);
+                    enhancedServiceIntent.putExtra("phoneNumber", incomingPhoneNumber);
+                    enhancedServiceIntent.putExtra("callType", "inbound");
+                    enhancedServiceIntent.putExtra("duration", 0); // TODO: Calculate actual duration
+                    enhancedServiceIntent.putExtra("status", "completed");
+                    context.startService(enhancedServiceIntent);
+                    
                 } else {
                     // Call was missed
                     Log.d(TAG, "Incoming call missed: " + incomingPhoneNumber);
@@ -85,6 +102,15 @@ public class CallReceiver extends BroadcastReceiver {
                     serviceIntent.putExtra("callType", "missed");
                     serviceIntent.putExtra("callStatus", "missed");
                     context.startForegroundService(serviceIntent);
+                    
+                    // NEW: Enhanced call service for automatic ticket creation
+                    Intent enhancedServiceIntent = new Intent(context, EnhancedCallService.class);
+                    enhancedServiceIntent.setAction(EnhancedCallService.ACTION_CALL_ENDED);
+                    enhancedServiceIntent.putExtra("phoneNumber", incomingPhoneNumber);
+                    enhancedServiceIntent.putExtra("callType", "inbound");
+                    enhancedServiceIntent.putExtra("duration", 0);
+                    enhancedServiceIntent.putExtra("status", "missed");
+                    context.startService(enhancedServiceIntent);
                 }
             }
 
@@ -107,6 +133,13 @@ public class CallReceiver extends BroadcastReceiver {
         serviceIntent.putExtra("phoneNumber", phoneNumber);
         serviceIntent.putExtra("callType", "outgoing");
         context.startForegroundService(serviceIntent);
+        
+        // NEW: Enhanced call service for outgoing calls
+        Intent enhancedServiceIntent = new Intent(context, EnhancedCallService.class);
+        enhancedServiceIntent.setAction(EnhancedCallService.ACTION_CALL_STARTED);
+        enhancedServiceIntent.putExtra("phoneNumber", phoneNumber);
+        enhancedServiceIntent.putExtra("callType", "outbound");
+        context.startService(enhancedServiceIntent);
     }
 
     private void resetCallState() {

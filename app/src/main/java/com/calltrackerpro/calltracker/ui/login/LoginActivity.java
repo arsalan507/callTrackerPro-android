@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.calltrackerpro.calltracker.CreateAccountActivity;
-import com.calltrackerpro.calltracker.DashboardRouterActivity;
+import com.calltrackerpro.calltracker.activities.UnifiedDashboardActivity;
 import com.calltrackerpro.calltracker.MainActivity;
 import com.calltrackerpro.calltracker.R;
 import com.calltrackerpro.calltracker.SignupStep1Activity;
@@ -135,6 +135,18 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "tvCreateAccount not found! Check if strings.xml has action_create_account");
         }
+        
+        // Test Login Button - Uses working credentials
+        Button testLoginButton = findViewById(R.id.demo_mode);
+        if (testLoginButton != null) {
+            testLoginButton.setOnClickListener(v -> {
+                Log.d(TAG, "Test Login clicked - using working credentials");
+                usernameEditText.setText("anas@anas.com");
+                passwordEditText.setText("Anas@1234");
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                attemptLogin();
+            });
+        }
     }
 
     // UPDATED: Handle pre-filled email from both CreateAccountActivity and SignupStep2Activity
@@ -201,6 +213,8 @@ public class LoginActivity extends AppCompatActivity {
                         handleLoginError("Invalid email or password. Please try again.");
                     } else if (response.code() == 429) {
                         handleLoginError("Too many login attempts. Please try again later.");
+                    } else if (response.code() == 500) {
+                        handleLoginError("Server error. Please try again later.");
                     } else {
                         handleLoginError("Login failed. Please check your credentials and try again.");
                     }
@@ -210,8 +224,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 loadingProgressBar.setVisibility(View.GONE);
-                handleLoginError("Network error. Please check your connection and try again.");
+                
+                // Enhanced error logging and handling
+                String errorMessage = "Network error. Please check your connection and try again.";
                 Log.e(TAG, "Login failed: " + t.getMessage());
+                Log.e(TAG, "Error class: " + t.getClass().getSimpleName());
+                Log.e(TAG, "Full stack trace: ", t);
+                
+                // Provide more specific error messages
+                if (t instanceof java.net.UnknownHostException) {
+                    errorMessage = "Cannot connect to server. Please check your internet connection.";
+                    Log.e(TAG, "DNS Resolution failed. Backend URL: https://calltrackerpro-backend.vercel.app");
+                } else if (t instanceof java.net.ConnectException) {
+                    errorMessage = "Server is unreachable. Please try again later.";
+                } else if (t instanceof java.net.SocketTimeoutException) {
+                    errorMessage = "Connection timeout. Please check your internet and try again.";
+                }
+                
+                handleLoginError(errorMessage);
             }
         });
     }
@@ -262,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(this, DashboardRouterActivity.class);
+        Intent intent = new Intent(this, UnifiedDashboardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

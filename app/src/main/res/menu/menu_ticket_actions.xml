@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_view_details"
+        android:title="View Details"
+        android:icon="@drawable/ic_visibility"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit_ticket"
+        android:title="Edit Ticket"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_assign_ticket"
+        android:title="Assign to Agent"
+        android:icon="@drawable/ic_person_add"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_assign_to_me"
+        android:title="Assign to Me"
+        android:icon="@drawable/ic_person"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_change_status"
+        android:title="Change Status"
+        android:icon="@drawable/ic_status"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_note"
+        android:title="Add Note"
+        android:icon="@drawable/ic_note_add"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_escalate"
+        android:title="Escalate"
+        android:icon="@drawable/ic_arrow_upward"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_mark_priority"
+        android:title="Change Priority"
+        android:icon="@drawable/ic_priority"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_share_ticket"
+        android:title="Share"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="never" />
+
+</menu>

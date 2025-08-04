@@ -1,8 +1,10 @@
 package com.calltrackerpro.calltracker.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class CallLog {
+public class CallLog implements Serializable {
+    private static final long serialVersionUID = 1L;
     @SerializedName("id")
     private String id;
 
