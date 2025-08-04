@@ -346,10 +346,11 @@ public class LoginActivity extends AppCompatActivity {
         com.calltrackerpro.calltracker.models.User mockUser = new com.calltrackerpro.calltracker.models.User();
         mockUser.setId("mock-user-123");
         mockUser.setEmail(userEmail);
-        mockUser.setFullName("Demo User");
+        mockUser.setFirstName("Demo");
+        mockUser.setLastName("User");
+        mockUser.setName("Demo User");
         mockUser.setRole("org_admin");
         mockUser.setOrganizationId("demo-org-123");
-        mockUser.setOrganizationName("Demo Organization");
         
         com.calltrackerpro.calltracker.models.AuthResponse mockResponse = new com.calltrackerpro.calltracker.models.AuthResponse();
         mockResponse.setSuccess(true);
