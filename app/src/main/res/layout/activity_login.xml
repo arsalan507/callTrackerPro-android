@@ -42,8 +42,9 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_logo_light"
+                android:src="@drawable/app_logo"
                 android:layout_marginEnd="12dp"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/logo_description" />
 
             <TextView

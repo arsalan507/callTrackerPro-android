@@ -20,9 +20,9 @@ if [ $? -eq 0 ]; then
         
         echo "🚀 Deploying to Firebase App Distribution..."
         
-        # Deploy to Firebase (you'll need to add your app ID)
+        # Deploy to Firebase
         firebase appdistribution:distribute "$APK_PATH" \
-            --app "YOUR_FIREBASE_APP_ID" \
+            --app "1:633047057029:android:e251736d56b0067acadfec" \
             --groups "testers" \
             --release-notes-file "./release-notes.txt"
         
