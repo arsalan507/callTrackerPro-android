@@ -246,12 +246,10 @@ public class LoginActivity extends AppCompatActivity {
                             if (hasInternet) {
                                 com.calltrackerpro.calltracker.utils.NetworkHelper.testBackendConnectivity();
                                 
-                                // After 3 failed attempts, suggest offline mode
+                                // After DNS failure, suggest offline mode for any email
                                 runOnUiThread(() -> {
-                                    String currentEmail = usernameEditText.getText().toString().trim();
-                                    if (currentEmail.contains("demo") || currentEmail.contains("test") || currentEmail.contains("anas")) {
-                                        showOfflineModeDialog();
-                                    }
+                                    // Show dialog for any DNS failure during login attempts
+                                    showOfflineModeDialog();
                                 });
                             }
                         } catch (Exception e) {

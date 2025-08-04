@@ -1,0 +1,6 @@
+{
+  "appDistribution": {
+    "serviceCredentialsFile": "./firebase-service-account.json",
+    "releaseNotesFile": "./release-notes.txt"
+  }
+}
