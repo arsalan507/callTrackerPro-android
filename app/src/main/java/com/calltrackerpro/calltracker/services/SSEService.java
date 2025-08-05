@@ -28,6 +28,7 @@ public class SSEService {
     private BufferedReader reader;
     private boolean isConnected = false;
     private SSEListener listener;
+    private int reconnectAttempts = 0;
     private String organizationId;
     private String teamId;
 
@@ -96,6 +97,7 @@ public class SSEService {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 isConnected = true;
+                reconnectAttempts = 0; // Reset on successful connection
                 
                 if (listener != null) {
                     listener.onConnectionEstablished();
@@ -250,13 +252,17 @@ public class SSEService {
             disconnect();
         }
         
-        // Wait a bit before reconnecting
+        // Implement exponential backoff to reduce spam
         executorService.execute(() -> {
             try {
-                Thread.sleep(2000);
+                // Start with 5 seconds, increase each attempt up to 60 seconds
+                long delayMs = Math.min(5000 * (long) Math.pow(2, Math.min(reconnectAttempts, 3)), 60000);
+                Log.d(TAG, "Reconnecting in " + delayMs + "ms (attempt " + reconnectAttempts + ")");
+                Thread.sleep(delayMs);
+                reconnectAttempts++;
                 connect(organizationId, teamId);
             } catch (InterruptedException e) {
-                Log.e(TAG, "Reconnect interrupted", e);
+                Log.d(TAG, "Reconnect cancelled", e);
             }
         });
     }

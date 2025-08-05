@@ -156,6 +156,8 @@ public class UnifiedDashboardActivity extends AppCompatActivity {
             Fragment currentFragment = getCurrentFragment();
             if (currentFragment instanceof TicketsFragment) {
                 ((TicketsFragment) currentFragment).refreshTickets();
+            } else if (currentFragment instanceof EnhancedTicketsFragment) {
+                ((EnhancedTicketsFragment) currentFragment).refreshTickets();
             }
             
             // Show notification for ticket assignments
@@ -209,7 +211,7 @@ public class UnifiedDashboardActivity extends AppCompatActivity {
                     if (itemId == R.id.nav_dashboard) {
                         selectedFragment = getDashboardFragment();
                     } else if (itemId == R.id.nav_tickets) {
-                        selectedFragment = new TicketsFragment();
+                        selectedFragment = new EnhancedTicketsFragment();
                     } else if (itemId == R.id.nav_calls) {
                         if (permissionManager.canViewCalls()) {
                             selectedFragment = new CallLogsFragment();
@@ -363,6 +365,14 @@ public class UnifiedDashboardActivity extends AppCompatActivity {
         String message = "You don't have permission to " + action;
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Log.w(TAG, "Permission denied: " + action + " for user: " + currentUser.getEmail());
+    }
+    
+    // Add method to replace fragments from dashboard buttons
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
     
     private void showError(String message) {

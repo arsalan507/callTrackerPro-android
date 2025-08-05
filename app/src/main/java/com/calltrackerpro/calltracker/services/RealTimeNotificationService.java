@@ -15,8 +15,8 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.calltrackerpro.calltracker.R;
-import com.calltrackerpro.calltracker.MainActivity;
 import com.calltrackerpro.calltracker.activities.TicketDetailsActivity;
+import com.calltrackerpro.calltracker.activities.UnifiedDashboardActivity;
 import com.calltrackerpro.calltracker.models.Ticket;
 import com.calltrackerpro.calltracker.utils.PreferenceManager;
 import com.calltrackerpro.calltracker.utils.TokenManager;
@@ -146,7 +146,7 @@ public class RealTimeNotificationService extends Service implements SSEService.S
     }
 
     private Notification createForegroundNotification() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, UnifiedDashboardActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
             this, 0, notificationIntent, 
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0
@@ -168,7 +168,7 @@ public class RealTimeNotificationService extends Service implements SSEService.S
             intent = new Intent(this, TicketDetailsActivity.class);
             intent.putExtra("ticket_id", ticketId);
         } else {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, UnifiedDashboardActivity.class);
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -311,13 +311,14 @@ public class RealTimeNotificationService extends Service implements SSEService.S
             listener.onConnectionStatusChanged(false);
         }
 
-        // Update foreground notification
+        // Update foreground notification - silent reconnection attempt
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("CallTracker Pro")
-                .setContentText("Real-time updates disconnected")
+                .setContentText("Service running")
                 .setSmallIcon(R.drawable.ic_notification)
                 .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setSilent(true)
                 .build();
 
         notificationManager.notify(NOTIFICATION_ID, notification);
@@ -332,11 +333,8 @@ public class RealTimeNotificationService extends Service implements SSEService.S
     public void onError(String error) {
         Log.e(TAG, "Real-time connection error: " + error);
         
-        // Show error notification
-        showTicketNotification(
-            "CallTracker Pro Error",
-            "Real-time updates error: " + error,
-            null
-        );
+        // Log error silently - Don't spam user with notifications
+        // TODO: Implement error tracking/analytics here instead of user notifications
+        // Only show critical errors that require user action
     }
 }

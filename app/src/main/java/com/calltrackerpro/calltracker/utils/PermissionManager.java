@@ -32,6 +32,13 @@ public class PermissionManager {
     public static final String DELETE_CALLS = "delete_calls";
     public static final String EXPORT_CALLS = "export_calls";
     
+    // Ticket Management Permissions
+    public static final String CREATE_TICKETS = "create_tickets";
+    public static final String EDIT_TICKETS = "edit_tickets";
+    public static final String DELETE_TICKETS = "delete_tickets";
+    public static final String VIEW_TICKETS = "view_tickets";
+    public static final String ASSIGN_TICKETS = "assign_tickets";
+    
     // Analytics and Reporting Permissions
     public static final String VIEW_ANALYTICS = "view_analytics";
     public static final String EXPORT_REPORTS = "export_reports";
@@ -230,5 +237,36 @@ public class PermissionManager {
         if (currentUser.isAgent()) return "agent";
         if (currentUser.isViewer()) return "viewer";
         return "agent"; // Default fallback
+    }
+    
+    // Ticket management permissions
+    public boolean canCreateTickets() {
+        return !currentUser.isViewer() && 
+               (currentUser.hasPermission(CREATE_TICKETS) || 
+                currentUser.isAgent() || 
+                currentUser.isManager() || 
+                currentUser.isOrganizationAdmin());
+    }
+    
+    public boolean canEditTickets() {
+        return currentUser.hasPermission(EDIT_TICKETS) || 
+               currentUser.isManager() || 
+               currentUser.isOrganizationAdmin();
+    }
+    
+    public boolean canDeleteTickets() {
+        return currentUser.isOrganizationAdmin() || 
+               currentUser.hasPermission(DELETE_TICKETS);
+    }
+    
+    public boolean canViewTickets() {
+        return currentUser.hasPermission(VIEW_TICKETS) || 
+               !currentUser.getRole().isEmpty(); // All authenticated users can view tickets
+    }
+    
+    public boolean canAssignTickets() {
+        return currentUser.hasPermission(ASSIGN_TICKETS) || 
+               currentUser.isManager() || 
+               currentUser.isOrganizationAdmin();
     }
 }

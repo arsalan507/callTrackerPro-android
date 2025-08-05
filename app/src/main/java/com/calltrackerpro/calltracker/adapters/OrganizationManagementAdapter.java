@@ -72,7 +72,7 @@ public class OrganizationManagementAdapter extends RecyclerView.Adapter<Organiza
         } else {
             String lowerCaseQuery = query.toLowerCase().trim();
             for (Organization org : organizations) {
-                if (org.getName().toLowerCase().contains(lowerCaseQuery) ||
+                if ((org.getName() != null && org.getName().toLowerCase().contains(lowerCaseQuery)) ||
                     (org.getDomain() != null && org.getDomain().toLowerCase().contains(lowerCaseQuery)) ||
                     (org.getSubscriptionPlan() != null && org.getSubscriptionPlan().toLowerCase().contains(lowerCaseQuery))) {
                     filteredOrganizations.add(org);
@@ -154,12 +154,13 @@ public class OrganizationManagementAdapter extends RecyclerView.Adapter<Organiza
         
         public void bind(Organization organization) {
             // Set organization icon with first letter of name
-            String iconText = organization.getName().substring(0, 1).toUpperCase();
+            String orgName = organization.getName() != null ? organization.getName() : "Unknown";
+            String iconText = orgName.substring(0, 1).toUpperCase();
             tvOrgIcon.setText(iconText);
             setOrgIconBackground(tvOrgIcon, organization.getSubscriptionStatus());
             
             // Set organization info
-            tvOrgName.setText(organization.getName());
+            tvOrgName.setText(orgName);
             
             // Set status badge
             String status = organization.getSubscriptionStatus() != null ? 

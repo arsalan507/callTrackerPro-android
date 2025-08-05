@@ -292,8 +292,10 @@ public class TicketsFragment extends Fragment implements TicketsAdapter.OnTicket
     }
 
     private User getCurrentUser() {
-        // TODO: Get current user from TokenManager or shared preferences
-        // This should be implemented based on your authentication system
+        if (getContext() != null) {
+            TokenManager tokenManager = new TokenManager(getContext());
+            return tokenManager.getUser();
+        }
         return null;
     }
 

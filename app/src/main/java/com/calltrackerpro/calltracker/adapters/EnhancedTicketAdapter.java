@@ -92,6 +92,77 @@ public class EnhancedTicketAdapter extends RecyclerView.Adapter<EnhancedTicketAd
         notifyDataSetChanged();
     }
     
+    public void applyFilters(String statusFilter, String priorityFilter, String tabFilter, String searchQuery, String currentUserId) {
+        filteredTickets.clear();
+        
+        for (Ticket ticket : tickets) {
+            if (matchesFilters(ticket, statusFilter, priorityFilter, tabFilter, searchQuery, currentUserId)) {
+                filteredTickets.add(ticket);
+            }
+        }
+        
+        notifyDataSetChanged();
+    }
+    
+    private boolean matchesFilters(Ticket ticket, String statusFilter, String priorityFilter, String tabFilter, String searchQuery, String currentUserId) {
+        // Search query filter
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            String lowerCaseQuery = searchQuery.toLowerCase().trim();
+            boolean matchesSearch = (ticket.getContactName() != null && ticket.getContactName().toLowerCase().contains(lowerCaseQuery)) ||
+                                  (ticket.getPhoneNumber() != null && ticket.getPhoneNumber().toLowerCase().contains(lowerCaseQuery)) ||
+                                  (ticket.getCompany() != null && ticket.getCompany().toLowerCase().contains(lowerCaseQuery)) ||
+                                  (ticket.getTicketId() != null && ticket.getTicketId().toLowerCase().contains(lowerCaseQuery)) ||
+                                  (ticket.getEmail() != null && ticket.getEmail().toLowerCase().contains(lowerCaseQuery));
+            if (!matchesSearch) return false;
+        }
+        
+        // Status filter
+        if (statusFilter != null && !statusFilter.equals("all")) {
+            String ticketStatus = ticket.getStatus() != null ? ticket.getStatus() : ticket.getLeadStatus();
+            if (!statusFilter.equals(ticketStatus)) return false;
+        }
+        
+        // Priority filter
+        if (priorityFilter != null && !priorityFilter.equals("all")) {
+            if (!priorityFilter.equals(ticket.getPriority())) return false;
+        }
+        
+        // Tab filter
+        if (tabFilter != null && !tabFilter.equals("all")) {
+            switch (tabFilter) {
+                case "my_tickets":
+                    if (currentUserId == null || !currentUserId.equals(ticket.getAssignedTo())) {
+                        return false;
+                    }
+                    break;
+                case "open":
+                    String status = ticket.getStatus() != null ? ticket.getStatus() : ticket.getLeadStatus();
+                    if (!"open".equals(status) && !"new".equals(status)) {
+                        return false;
+                    }
+                    break;
+                case "in_progress":
+                    String progressStatus = ticket.getStatus() != null ? ticket.getStatus() : ticket.getLeadStatus();
+                    if (!"in_progress".equals(progressStatus) && !"contacted".equals(progressStatus)) {
+                        return false;
+                    }
+                    break;
+                case "high_priority":
+                    if (!"high".equals(ticket.getPriority()) && !"urgent".equals(ticket.getPriority())) {
+                        return false;
+                    }
+                    break;
+                case "overdue":
+                    if (!ticket.isOverdue()) {
+                        return false;
+                    }
+                    break;
+            }
+        }
+        
+        return true;
+    }
+    
     public void filterByStatus(String status) {
         filteredTickets.clear();
         

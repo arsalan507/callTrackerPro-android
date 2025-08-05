@@ -64,7 +64,8 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
         }
         
         public void bind(Organization organization, OnOrganizationClickListener listener) {
-            nameTextView.setText(organization.getName());
+            String orgName = organization.getName() != null ? organization.getName() : "Unknown Organization";
+            nameTextView.setText(orgName);
             
             if (organization.getDomain() != null && !organization.getDomain().isEmpty()) {
                 domainTextView.setText(organization.getDomain());

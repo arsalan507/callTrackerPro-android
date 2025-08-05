@@ -83,6 +83,7 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
     private String currentStatusFilter = "all";
     private String currentPriorityFilter = "all";
     private String currentTabFilter = "all";
+    private String currentSearchQuery = "";
     private boolean isAdvancedFiltersVisible = false;
     private boolean isSearchVisible = false;
     
@@ -214,9 +215,8 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
             
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (ticketAdapter != null) {
-                    ticketAdapter.filter(s.toString());
-                }
+                currentSearchQuery = s.toString();
+                applyAllFilters();
             }
             
             @Override
@@ -240,7 +240,7 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
                 currentStatusFilter = "resolved";
             }
             
-            applyFilters();
+            applyAllFilters();
         });
         
         // Priority filter chips
@@ -260,13 +260,13 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
                 currentPriorityFilter = "low";
             }
             
-            applyFilters();
+            applyAllFilters();
         });
     }
     
     private void setupFloatingActionButtons() {
         // Create ticket FAB
-        if (permissionManager != null && permissionManager.canCreateContacts()) {
+        if (permissionManager != null && permissionManager.canCreateTickets()) {
             fabCreateTicket.setVisibility(View.VISIBLE);
             fabCreateTicket.setOnClickListener(v -> createNewTicket());
             btnCreateFirstTicket.setOnClickListener(v -> createNewTicket());
@@ -337,22 +337,124 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
             @Override
             public void onFailure(Call<ApiResponse<List<Ticket>>> call, Throwable t) {
                 showLoading(false);
-                showError("Network error: " + t.getMessage());
                 Log.e(TAG, "Network error loading tickets", t);
+                
+                // Show demo data when network fails
+                loadDemoTickets();
+                Toast.makeText(getContext(), "Loading demo data (network unavailable)", Toast.LENGTH_SHORT).show();
             }
         });
     }
     
+    private void loadDemoTickets() {
+        List<Ticket> demoTickets = new ArrayList<>();
+        
+        // Create demo tickets with varied data for filtering
+        Ticket ticket1 = new Ticket();
+        ticket1.setId("demo-1");
+        ticket1.setTicketId("TKT-001");
+        ticket1.setContactName("John Smith");
+        ticket1.setPhoneNumber("+1 (555) 123-4567");
+        ticket1.setCompany("Acme Corp");
+        ticket1.setEmail("john.smith@acme.com");
+        ticket1.setStatus("open");
+        ticket1.setPriority("high");
+        ticket1.setLeadStatus("new");
+        ticket1.setStage("prospect");
+        ticket1.setCategory("sales");
+        ticket1.setSource("phone");
+        ticket1.setAssignedTo(currentUser != null ? currentUser.getId() : null);
+        
+        Ticket ticket2 = new Ticket();
+        ticket2.setId("demo-2");
+        ticket2.setTicketId("TKT-002");
+        ticket2.setContactName("Jane Doe");
+        ticket2.setPhoneNumber("+1 (555) 987-6543");
+        ticket2.setCompany("TechStart Inc");
+        ticket2.setEmail("jane.doe@techstart.com");
+        ticket2.setStatus("in_progress");
+        ticket2.setPriority("medium");
+        ticket2.setLeadStatus("contacted");
+        ticket2.setStage("qualified");
+        ticket2.setCategory("support");
+        ticket2.setSource("email");
+        ticket2.setAssignedTo("other-user-id");
+        
+        Ticket ticket3 = new Ticket();
+        ticket3.setId("demo-3");
+        ticket3.setTicketId("TKT-003");
+        ticket3.setContactName("Mike Johnson");
+        ticket3.setPhoneNumber("+1 (555) 555-0123");
+        ticket3.setCompany("Global Solutions");
+        ticket3.setEmail("mike.j@global.com");
+        ticket3.setStatus("resolved");
+        ticket3.setPriority("low");
+        ticket3.setLeadStatus("qualified");
+        ticket3.setStage("proposal");
+        ticket3.setCategory("technical");
+        ticket3.setSource("web");
+        ticket3.setAssignedTo("another-user-id");
+        
+        Ticket ticket4 = new Ticket();
+        ticket4.setId("demo-4");
+        ticket4.setTicketId("TKT-004");
+        ticket4.setContactName("Sarah Wilson");
+        ticket4.setPhoneNumber("+1 (555) 777-8888");
+        ticket4.setCompany("Innovation Labs");
+        ticket4.setEmail("sarah.wilson@innovation.com");
+        ticket4.setStatus("open");
+        ticket4.setPriority("urgent");
+        ticket4.setLeadStatus("new");
+        ticket4.setStage("prospect");
+        ticket4.setCategory("sales");
+        ticket4.setSource("mobile_app");
+        ticket4.setAssignedTo(currentUser != null ? currentUser.getId() : null);
+        
+        Ticket ticket5 = new Ticket();
+        ticket5.setId("demo-5");
+        ticket5.setTicketId("TKT-005");
+        ticket5.setContactName("David Brown");
+        ticket5.setPhoneNumber("+1 (555) 222-3333");
+        ticket5.setCompany("Brown Enterprises");
+        ticket5.setEmail("david@brown-ent.com");
+        ticket5.setStatus("closed");
+        ticket5.setPriority("medium");
+        ticket5.setLeadStatus("converted");
+        ticket5.setStage("closed-won");
+        ticket5.setCategory("billing");
+        ticket5.setSource("phone");
+        ticket5.setDealValue(50000);
+        
+        demoTickets.add(ticket1);
+        demoTickets.add(ticket2);
+        demoTickets.add(ticket3);
+        demoTickets.add(ticket4);
+        demoTickets.add(ticket5);
+        
+        ticketAdapter.setTickets(demoTickets);
+        updateTicketStats(demoTickets);
+        updateEmptyState();
+    }
+    
     private void applyTabFilter() {
-        // Apply additional filtering based on tab selection
-        loadTickets(); // For now, reload from server with tab filter
+        applyAllFilters();
+    }
+    
+    private void applyAllFilters() {
+        if (ticketAdapter != null && currentUser != null) {
+            ticketAdapter.applyFilters(
+                    currentStatusFilter, 
+                    currentPriorityFilter, 
+                    currentTabFilter, 
+                    currentSearchQuery, 
+                    currentUser.getId()
+            );
+            updateEmptyState();
+        }
     }
     
     private void applyFilters() {
-        if (ticketAdapter != null) {
-            ticketAdapter.filterByStatus(currentStatusFilter);
-            ticketAdapter.filterByPriority(currentPriorityFilter);
-        }
+        applyAllFilters();
     }
     
     private void toggleSearch() {
@@ -363,6 +465,8 @@ public class EnhancedTicketsFragment extends Fragment implements UnifiedDashboar
             etSearchTickets.requestFocus();
         } else {
             etSearchTickets.setText("");
+            currentSearchQuery = "";
+            applyAllFilters();
         }
     }
     

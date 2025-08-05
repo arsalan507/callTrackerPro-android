@@ -18,6 +18,7 @@ import com.calltrackerpro.calltracker.models.Organization;
 import com.calltrackerpro.calltracker.models.ApiResponse;
 import com.calltrackerpro.calltracker.services.ApiService;
 import com.calltrackerpro.calltracker.utils.PermissionManager;
+import com.calltrackerpro.calltracker.activities.UnifiedDashboardActivity;
 import com.calltrackerpro.calltracker.utils.RetrofitClient;
 import com.calltrackerpro.calltracker.utils.TokenManager;
 import retrofit2.Call;
@@ -138,8 +139,12 @@ public class OrgAdminDashboardFragment extends Fragment {
     private void updateUIBasedOnPermissions() {
         if (currentUser != null) {
             // Set welcome message with organization name
-            String orgName = currentUser.getCurrentOrganization() != null ? 
-                            currentUser.getCurrentOrganization().getName() : "Organization";
+            String orgName = "CallTracker Pro"; // Default organization name
+            if (currentUser.getCurrentOrganization() != null && 
+                currentUser.getCurrentOrganization().getName() != null && 
+                !currentUser.getCurrentOrganization().getName().trim().isEmpty()) {
+                orgName = currentUser.getCurrentOrganization().getName();
+            }
             String welcomeMessage = "Welcome to " + orgName + ", " + currentUser.getFirstName() + "! 👑";
             welcomeTextView.setText(welcomeMessage);
             
@@ -302,7 +307,9 @@ public class OrgAdminDashboardFragment extends Fragment {
     
     private void navigateToUserManagement() {
         Log.d(TAG, "Navigating to user management");
-        // TODO: Navigate to user management fragment/activity
+        if (getActivity() instanceof UnifiedDashboardActivity) {
+            ((UnifiedDashboardActivity) getActivity()).replaceFragment(new UserManagementFragment());
+        }
     }
     
     private void navigateToTeamManagement() {
@@ -312,7 +319,9 @@ public class OrgAdminDashboardFragment extends Fragment {
     
     private void navigateToOrganizationAnalytics() {
         Log.d(TAG, "Navigating to organization analytics");
-        // TODO: Navigate to organization analytics fragment/activity
+        if (getActivity() instanceof UnifiedDashboardActivity) {
+            ((UnifiedDashboardActivity) getActivity()).replaceFragment(new OrganizationAnalyticsFragment());
+        }
     }
     
     private void navigateToOrganizationSettings() {
