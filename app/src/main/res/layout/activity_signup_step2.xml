@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#6200EA">
+    android:background="@drawable/gradient_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:id="@+id/editTextFirstName"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@android:color/white"
+            android:background="@drawable/rounded_input_background"
             android:hint="Enter your first name"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/black"
@@ -68,7 +68,7 @@
             android:id="@+id/editTextLastName"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@android:color/white"
+            android:background="@drawable/rounded_input_background"
             android:hint="Enter your last name"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/black"
@@ -90,7 +90,7 @@
             android:id="@+id/editTextPhone"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@android:color/white"
+            android:background="@drawable/rounded_input_background"
             android:hint="Enter your phone number"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/black"
@@ -112,7 +112,7 @@
             android:id="@+id/editTextOrganization"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@android:color/white"
+            android:background="@drawable/rounded_input_background"
             android:hint="Enter your company/organization name"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="@android:color/black"
@@ -169,7 +169,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="#5E35B1"
+                android:background="@drawable/secondary_button_background"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -181,7 +181,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="#3700B3"
+                android:background="@drawable/primary_button_background"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
