@@ -64,6 +64,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
+                    <!-- Contact Name - View Mode -->
                     <TextView
                         android:id="@+id/text_contact_name"
                         android:layout_width="wrap_content"
@@ -72,7 +73,26 @@
                         android:textColor="@color/text_primary"
                         android:textSize="20sp"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         tools:text="John Doe" />
+
+                    <!-- Contact Name - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_contact_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Contact Name"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_contact_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -80,6 +100,7 @@
                         android:layout_marginBottom="8dp"
                         android:orientation="horizontal">
 
+                        <!-- Phone Number - View Mode -->
                         <TextView
                             android:id="@+id/text_phone_number"
                             android:layout_width="0dp"
@@ -87,6 +108,7 @@
                             android:layout_weight="1"
                             android:textColor="@color/text_secondary"
                             android:textSize="16sp"
+                            android:visibility="gone"
                             tools:text="+1 (555) 123-4567" />
 
                         <ImageView
@@ -97,6 +119,7 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:padding="4dp"
                             android:src="@drawable/ic_phone"
+                            android:visibility="gone"
                             app:tint="@color/status_new" />
 
                         <ImageView
@@ -106,10 +129,30 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:padding="4dp"
                             android:src="@drawable/ic_sms"
+                            android:visibility="gone"
                             app:tint="@color/status_new" />
 
                     </LinearLayout>
 
+                    <!-- Phone Number - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Phone Number"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_phone_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Company - View Mode -->
                     <TextView
                         android:id="@+id/text_company"
                         android:layout_width="wrap_content"
@@ -117,15 +160,53 @@
                         android:layout_marginBottom="4dp"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         tools:text="Acme Corporation" />
 
+                    <!-- Company - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_company"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Company"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_company"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Email - View Mode -->
                     <TextView
                         android:id="@+id/text_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         tools:text="john.doe@acme.com" />
+
+                    <!-- Email - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -155,11 +236,14 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
+                    <!-- Call Type - View Mode -->
                     <LinearLayout
+                        android:id="@+id/layout_call_type_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -177,11 +261,38 @@
 
                     </LinearLayout>
 
+                    <!-- Call Type - Edit Mode -->
                     <LinearLayout
+                        android:id="@+id/layout_call_type_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Call Type"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+
+                        <Spinner
+                            android:id="@+id/spinner_call_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/call_types" />
+
+                    </LinearLayout>
+
+                    <!-- Call Duration - View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_call_duration_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -199,11 +310,32 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!-- Call Duration - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_call_duration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
+                        android:hint="Duration (minutes)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_call_duration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Call Date - View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_call_date_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -221,10 +353,31 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!-- Call Date - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_call_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginBottom="8dp"
+                        android:hint="Call Date (YYYY-MM-DD)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_call_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="date"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Call Quality - View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_call_quality_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -239,6 +392,29 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             tools:text="4/5 stars" />
+
+                    </LinearLayout>
+
+                    <!-- Call Quality - Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_call_quality_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Call Quality (1-5)"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+
+                        <Spinner
+                            android:id="@+id/spinner_call_quality"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/call_quality_ratings" />
 
                     </LinearLayout>
 
@@ -270,12 +446,14 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- Status Chips -->
+                    <!-- Status Chips - View Mode -->
                     <LinearLayout
+                        android:id="@+id/layout_status_chips_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chip_lead_status"
@@ -299,29 +477,145 @@
 
                     </LinearLayout>
 
-                    <!-- Lead Details -->
-                    <TextView
-                        android:id="@+id/text_lead_source"
-                        android:layout_width="wrap_content"
+                    <!-- Lead Status - Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_lead_status_edit"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Source: Cold Call" />
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_budget_range"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Budget: $10,000 - $50,000" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Lead Status"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/text_timeline"
-                        android:layout_width="wrap_content"
+                        <Spinner
+                            android:id="@+id/spinner_lead_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/lead_status_options" />
+
+                    </LinearLayout>
+
+                    <!-- Priority - Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_priority_edit"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Timeline: Q2 2024" />
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Priority"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+
+                        <Spinner
+                            android:id="@+id/spinner_priority"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/priority_options" />
+
+                    </LinearLayout>
+
+                    <!-- Interest Level - Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_interest_level_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Interest Level"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+
+                        <Spinner
+                            android:id="@+id/spinner_interest_level"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/interest_level_options" />
+
+                    </LinearLayout>
+
+                    <!-- Lead Details - View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_lead_details_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/text_lead_source"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Source: Cold Call" />
+
+                        <TextView
+                            android:id="@+id/text_budget_range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Budget: $10,000 - $50,000" />
+
+                        <TextView
+                            android:id="@+id/text_timeline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Timeline: Q2 2024" />
+
+                    </LinearLayout>
+
+                    <!-- Budget Range - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_budget_range"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Budget Range (e.g., $10,000 - $50,000)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_budget_range"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Timeline - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_timeline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Timeline (e.g., Q2 2024)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_timeline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -351,50 +645,166 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
+                    <!-- Stage Chip - View Mode -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_stage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
+                        android:visibility="gone"
                         tools:text="Proposal" />
 
-                    <!-- Pipeline Details -->
-                    <TextView
-                        android:id="@+id/text_assigned_agent"
-                        android:layout_width="wrap_content"
+                    <!-- Pipeline Stage - Edit Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_stage_edit"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Assigned: Jane Smith" />
+                        android:layout_marginBottom="8dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_next_follow_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Next Follow-up: Jan 20, 2024" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Pipeline Stage"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/text_deal_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textColor="@color/success_color"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        tools:text="Deal Value: $25,000" />
+                        <Spinner
+                            android:id="@+id/spinner_stage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/pipeline_stages" />
 
-                    <TextView
-                        android:id="@+id/text_conversion_probability"
-                        android:layout_width="wrap_content"
+                    </LinearLayout>
+
+                    <!-- Pipeline Details - View Mode -->
+                    <LinearLayout
+                        android:id="@+id/layout_pipeline_details_view"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_secondary"
-                        tools:text="Conversion Probability: 75%" />
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/text_assigned_agent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Assigned: Jane Smith" />
+
+                        <TextView
+                            android:id="@+id/text_next_follow_up"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Next Follow-up: Jan 20, 2024" />
+
+                        <TextView
+                            android:id="@+id/text_deal_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textColor="@color/success_color"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="Deal Value: $25,000" />
+
+                        <TextView
+                            android:id="@+id/text_conversion_probability"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Conversion Probability: 75%" />
+
+                    </LinearLayout>
+
+                    <!-- Assigned Agent - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_assigned_agent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Assigned Agent (optional)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_assigned_agent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Next Follow-up - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_next_follow_up"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Next Follow-up Date (YYYY-MM-DD)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_next_follow_up"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="date"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Deal Value - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_deal_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Deal Value ($)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_deal_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Conversion Probability - Edit Mode -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_conversion_probability"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Conversion Probability (%)"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_conversion_probability"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <!-- Save Button for Create/Edit Mode -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_ticket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Save Ticket"
+                android:textColor="@android:color/white"
+                style="@style/Widget.MaterialComponents.Button" />
 
             <!-- Notes Card -->
             <androidx.cardview.widget.CardView

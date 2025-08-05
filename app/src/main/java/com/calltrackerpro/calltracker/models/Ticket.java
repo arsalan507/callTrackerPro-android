@@ -383,6 +383,7 @@ public class Ticket implements Serializable {
     }
 
     public String getPriorityDisplayName() {
+        if (priority == null) return "No Priority";
         switch (priority) {
             case "urgent": return "Urgent Priority";
             case "high": return "High Priority";
@@ -393,6 +394,7 @@ public class Ticket implements Serializable {
     }
 
     public String getStageDisplayName() {
+        if (stage == null) return "No Stage";
         switch (stage) {
             case "prospect": return "Prospect";
             case "qualified": return "Qualified";
@@ -405,6 +407,7 @@ public class Ticket implements Serializable {
     }
 
     public String getLeadStatusDisplayName() {
+        if (leadStatus == null) return "No Status";
         switch (leadStatus) {
             case "new": return "New";
             case "contacted": return "Contacted";

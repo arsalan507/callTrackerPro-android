@@ -18,6 +18,51 @@
     <string name="login_failed">Login failed</string>
     <string name="invalid_credentials">Invalid email or password</string>
     <string name="user_not_found">User not found</string>
+
+    <!-- Ticket Creation Arrays -->
+    <string-array name="call_types">
+        <item>Incoming</item>
+        <item>Outgoing</item>
+        <item>Missed</item>
+    </string-array>
+
+    <string-array name="call_quality_ratings">
+        <item>1 - Poor</item>
+        <item>2 - Fair</item>
+        <item>3 - Good</item>
+        <item>4 - Very Good</item>
+        <item>5 - Excellent</item>
+    </string-array>
+
+    <string-array name="lead_status_options">
+        <item>New</item>
+        <item>Contacted</item>
+        <item>Qualified</item>
+        <item>Converted</item>
+        <item>Closed</item>
+    </string-array>
+
+    <string-array name="priority_options">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+        <item>Urgent</item>
+    </string-array>
+
+    <string-array name="interest_level_options">
+        <item>Cold</item>
+        <item>Warm</item>
+        <item>Hot</item>
+    </string-array>
+
+    <string-array name="pipeline_stages">
+        <item>Prospect</item>
+        <item>Qualified</item>
+        <item>Proposal</item>
+        <item>Negotiation</item>
+        <item>Closed Won</item>
+        <item>Closed Lost</item>
+    </string-array>
     <string name="server_error">Server error. Please try again later</string>
     <string name="network_error">Network error: %s</string>
     <string name="title_activity_login">Login</string>
